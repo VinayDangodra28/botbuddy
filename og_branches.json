@@ -1,0 +1,330 @@
+{
+    "greeting": {
+        "intent": "initial_greeting",
+        "bot_prompt": "Hello and very Good Morning Sir, May I speak with {policy_holder_name}?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "intro_and_consent",
+                "response": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?"
+            },
+            "no": {
+                "next": "ask_relationship",
+                "response": "May I know your relationship with {policy_holder_name}?"
+            },
+            "busy_or_irritated": {
+                "next": "check_reschedule",
+                "response": "It will take just 2 minutes of your time. Can we discuss it right now or should I reschedule your call at a better time?"
+            }
+        }
+    },
+    "ask_relationship": {
+        "intent": "relationship_check",
+        "bot_prompt": "May I know your relationship with {policy_holder_name}?",
+        "expected_user_responses": {
+            "defines_relationship": {
+                "next": "policy_handling_check",
+                "response": "Do you handle {policy_holder_name}'s life insurance policy number {policy_number}? Are you aware of the details of this policy?"
+            }
+        }
+    },
+    "policy_handling_check": {
+        "intent": "policy_awareness_check",
+        "bot_prompt": "Do you handle {policy_holder_name}'s life insurance policy number {policy_number}? Are you aware of the details of this policy?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "policy_confirmation",
+                "response": null
+            },
+            "no": {
+                "next": "schedule_callback",
+                "response": "I'll call back when {policy_holder_name} is available."
+            }
+        }
+    },
+    "intro_and_consent": {
+        "intent": "introduction_consent",
+        "bot_prompt": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "policy_confirmation",
+                "response": null
+            },
+            "no": {
+                "next": "check_reschedule",
+                "response": null
+            }
+        }
+    },
+    "check_reschedule": {
+        "intent": "reschedule_offer",
+        "expected_user_responses": {
+            "talk_now": {
+                "next": "policy_confirmation",
+                "response": null
+            },
+            "reschedule": {
+                "next": "schedule_callback",
+                "response": "When would be a convenient time to call you again to provide the information about your policy with us? Please can you give a time and date?"
+            }
+        }
+    },
+    "schedule_callback": {
+        "intent": "callback_confirmed",
+        "bot_prompt": "Thank you sir/ma'am, I will arrange your call back at the given time.",
+        "next": "closure"
+    },
+    "policy_confirmation": {
+        "intent": "confirm_policy",
+        "bot_prompt": "Let me start by confirming your policy details. Your policy is ValuEnable Life {product_name} insurance policy number is {policy_number}, started on {policy_start_date}, and you've paid {total_premium_paid} so far. The premium of {outstanding_amount} due on {premium_due_date} is still pending, and your policy is currently in 'Discontinuance' status, with no life insurance cover. Could you please let me know why you haven't been able to pay the premium?",
+        "expected_user_responses": {
+            "financial_problem_or_other_reason": {
+                "next": "explain_policy_loss",
+                "response": "I would like to inform you that the due date for renewal premium payment for your policy was on {premium_due_date}. The grace period is over and you are losing the benefit of your plan. Would you like to know what your policy's benefits you could get if you resume paying premiums?"
+            },
+            "already_paid": {
+                "next": "payment_already_made",
+                "response": null
+            },
+            "no_policy_bond": {
+                "next": "policy_bond_help",
+                "response": null
+            },
+            "can't_pay": {
+                "next": "financial_problem_handling",
+                "response": null
+            },
+            "refuses_payment": {
+                "next": "rebuttals",
+                "response": null
+            },
+            "market_high": {
+                "next": "scenario_market_high",
+                "response": null
+            },
+            "single_premium_told": {
+                "next": "scenario_single_premium",
+                "response": null
+            },
+            "emergency_needs": {
+                "next": "scenario_emergency_needs",
+                "response": null
+            },
+            "better_alternatives": {
+                "next": "scenario_better_alternatives",
+                "response": null
+            },
+            "low_returns": {
+                "next": "scenario_low_returns",
+                "response": null
+            },
+            "buying_new_policy": {
+                "next": "scenario_new_policy",
+                "response": null
+            }
+        }
+    },
+    "explain_policy_loss": {
+        "intent": "benefit_explanation",
+        "bot_prompt": "Sir, you will get maximum Allocation in the Invested Fund i.e., % of Premium which will boost up your investment. Allocation in renewal premiums is much higher than the first year premium. Renewal premiums also provide tax saving benefits under Sec 80(c), 10(10(D)) as per Indian tax laws. Does this help you make a more informed decision about your policy?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup"
+            },
+            "no": {
+                "next": "rebuttals"
+            }
+        }
+    },
+    "payment_followup": {
+        "intent": "payment_mode_check",
+        "bot_prompt": "May I know how you plan to make the payment? Will it be via cash, cheque, or online?",
+        "expected_user_responses": {
+            "online": {
+                "next": "payment_details",
+                "response": "Great! For online payment, you can use Debit/Credit card, Net Banking, PhonePe, Whatsapp or Google Pay. Would you like me to send you the payment link now?"
+            },
+            "cheque_or_other": {
+                "next": "payment_details",
+                "response": "I understand. However, online payment is much faster and convenient. Would you like me to help you with the online payment process instead?"
+            },
+            "branch_visit": {
+                "next": "payment_details",
+                "response": "You can conveniently pay the premium from home using our secure online portal. Shall I guide you through the process?"
+            },
+            "tentative_date": {
+                "next": "payment_details",
+                "response": "When would you prefer to make the payment? I can send you a reminder and payment link."
+            },
+            "confirmed_payment_time": {
+                "next": "payment_details",
+                "response": "Excellent! I'll note that you'll pay on {payment_date} at {payment_time}. Shall I send the payment link now?"
+            }
+        }
+    },
+    "payment_details": {
+        "intent": "payment_confirmation",
+        "bot_prompt": "Perfect! I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?",
+        "expected_user_responses": {
+            "yes_today": {
+                "next": "closure",
+                "response": "Wonderful! I'm sending the payment link now. Please complete the payment and we'll update your policy status immediately. Thank you for choosing ValuEnable!"
+            },
+            "later_today": {
+                "next": "closure",
+                "response": "That's fine. I'm sending the link now. Please complete it by end of day. We'll follow up tomorrow if needed."
+            },
+            "tomorrow_or_later": {
+                "next": "closure",
+                "response": "I understand. I'm sending the payment link which will be valid for 7 days. May I call you tomorrow to confirm the payment?"
+            },
+            "need_help": {
+                "next": "closure",
+                "response": "No problem! I'll send you step-by-step instructions along with the payment link. Our customer support is also available at 1800-200-5021."
+            },
+            "refuse_or_delay": {
+                "next": "closure",
+                "response": "I understand your concern. Remember, your policy is currently inactive. I'll keep the payment link active for 7 days. Can I call back in 2 days?"
+            }
+        }
+    },
+    "payment_already_made": {
+        "intent": "payment_confirmation",
+        "bot_prompt": "Thank you for making the payment. May I know when you made the payment?",
+        "expected_user_responses": {
+            "provides_date": {
+                "follow_up": "May I know where you made the payment (online, cheque, or cash)?"
+            },
+            "provides_mode": {
+                "follow_up": "Could you please provide the transaction id or reference id? For cheque payments, we'll need the cheque number."
+            }
+        },
+        "next": "closure"
+    },
+    "policy_bond_help": {
+        "intent": "help_policy_bond",
+        "bot_prompt": "You can download the policy bond via WhatsApp. Please message us from your registered number on 8806727272."
+    },
+    "financial_problem_handling": {
+        "intent": "financial_constraint",
+        "bot_prompt": "I understand your concern. To achieve your financial goals, staying invested is key. You can pay via credit card, EMI, or change payment mode to monthly. Can you arrange the premium to continue benefits?"
+    },
+    "rebuttals": {
+        "intent": "rebuttal_for_refusal",
+        "bot_prompt": "You can opt for Partial Withdrawal after completing 5 years. If you stop before that, you'll get only 4–4.5% returns and lose your sum assured of {sum_assured}. If you continue, at maturity you'll receive {fund_value}. Would you be willing to pay now?",
+        "expected_user_responses": {
+            "maybe_later": {
+                "next": "schedule_callback"
+            },
+            "no": {
+                "next": "closure"
+            },
+            "yes": {
+                "next": "payment_followup",
+                "response": "Great! We can help you switch to debt funds and use Auto-transfer Portfolio strategy to systematically move to equity when markets are favorable."
+            }
+        }
+    },
+    "closure": {
+        "intent": "end_conversation",
+        "bot_prompt": "For any further assistance with your policy, feel free to call our helpline at 1800 209 7272, message us on WhatsApp at 8806 727272, mail us, or visit our website. Thank you for your valuable time. Have a great day ahead.",
+        "action": "END_CALL"
+    },
+    "scenario_market_high": {
+        "intent": "market_timing_objection",
+        "bot_prompt": "I understand your concern about market timing. However, there are specific due dates for premium payments. Your life insurance worth ₹{sum_assured} has been reduced to NIL as you wait. You can choose debt-oriented funds with lower risk - our Bond Fund has 5-year returns of 5.45%. Would you like to continue with reduced risk funds?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Great! We can help you switch to debt funds and use Auto-transfer Portfolio strategy to systematically move to equity when markets are favorable."
+            },
+            "no": {
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_single_premium": {
+        "intent": "single_premium_misconception",
+        "bot_prompt": "I understand the confusion. Your policy document shows PPT 7 years, meaning 7 premium payments. By discontinuing, you're missing value in 2 ways: your money goes to low-yield Discontinued Fund (4.30% vs Pure Stock Fund's 16.91%), and you lose ₹{sum_assured} life cover. Continue paying to keep your ₹{sum_assured} cover and access market-linked funds. Would you like to continue?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Excellent! You'll also get loyalty additions of ₹22,000 over the policy term."
+            },
+            "no": {
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_emergency_needs": {
+        "intent": "emergency_financial_needs",
+        "bot_prompt": "I understand medical emergencies are urgent. However, by not paying premium, your ₹{sum_assured} life insurance has reduced to NIL. I suggest paying via credit card now, then switching to monthly/quarterly payments. After 5 years, you can use partial withdrawal for emergencies. Can you pay via credit card?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Perfect! We'll process your credit card payment and set up convenient payment frequency for future premiums."
+            },
+            "no": {
+                "next": "financial_problem_handling",
+                "response": null
+            }
+        }
+    },
+    "scenario_better_alternatives": {
+        "intent": "alternative_investment_objection",
+        "bot_prompt": "Before deciding, compare effective charges. Most mutual funds charge 2% expense ratio without life cover. Your policy's effective charges reduce to just 1.61% for remaining term, plus you get ₹{sum_assured} life cover and loyalty additions of ₹22,000. These benefits aren't available in mutual funds. Would you like to continue?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Smart choice! Your policy provides better value with insurance cover and lower effective charges."
+            },
+            "no": {
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_low_returns": {
+        "intent": "returns_dissatisfaction",
+        "bot_prompt": "Actually, you've earned 11.47% annualized effective returns post all charges and taxes! Your effective charges reduce sharply from 3.89% till date to just 1.61% for remaining term. You can switch to any fund based on your risk appetite. Would you like to explore better fund options?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Great! Let's discuss fund switching options to optimize your returns while continuing your policy."
+            },
+            "no": {
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_new_policy": {
+        "intent": "new_policy_consideration",
+        "bot_prompt": "ULIPs have higher charges in initial years. Your current policy's effective charges for remaining term is only 1.61% - much cheaper than any new ULIP. For diversification, you can switch part of your funds to debt funds within this policy. Would you like to continue this policy instead?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Wise decision! We can help you diversify your asset allocation within your existing policy."
+            },
+            "no": {
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "tax_benefit_explanation": {
+        "intent": "tax_benefit_info",
+        "bot_prompt": "Your policy provides tax benefits under Section 80C for premium payments and Section 10(10D) for maturity proceeds. This reduces your effective cost significantly. Combined with insurance cover and investment returns, would you like to continue to get these tax advantages?",
+        "expected_user_responses": {
+            "yes": {
+                "next": "payment_followup",
+                "response": "Excellent! Tax benefits make your policy even more valuable financially."
+            },
+            "no": {
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    }
+}

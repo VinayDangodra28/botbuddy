@@ -1,0 +1,760 @@
+{
+  "pending_operations": [
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-12T21:55:32.727803",
+      "data": {
+        "branch_name": "handle_payment_options_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_options",
+          "bot_prompt": "If the user asks a question about the outstanding amount (e.g., 'Why 10,000?', 'How was this calculated?', 'What does this cover?'), provide a clear explanation of the calculation and what the amount covers.  Then, ask if the user has any further questions before proceeding to the payment options.",
+          "expected_user_responses": {
+            "satisfied": {
+              "next": "payment_options",
+              "response": "Great! Now that we've clarified that, let's discuss your payment options for renewing your policy. We offer several convenient methods..."
+            },
+            "unsatisfied": {
+              "next": "payment_calculation_details",
+              "response": "I understand your concern. Let me provide you with a detailed breakdown of the outstanding amount calculation.  [Provide detailed breakdown here].  Does this explanation clarify the ₹10,000 outstanding balance?"
+            },
+            "further_questions": {
+              "next": "payment_clarification",
+              "response": "Certainly. Please let me know what other questions you have about the outstanding payment."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_options",
+            "previous_response": "unexpected_question_amount",
+            "response_of_previous_response": [
+              "but why 10,000?",
+              "How was this calculated?",
+              "What does this cover?",
+              "Why is the outstanding amount ₹10,000?"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-12T21:56:14.316118",
+      "data": {
+        "branch_name": "handle_payment_clarification_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_clarification",
+          "bot_prompt": "If the user gives a short, non-committal affirmative response (e.g., 'ok', 'got it', 'okay', 'k') after clarifying the outstanding amount, confirm their understanding and readiness to proceed with payment. If they confirm, proceed to payment options. If not, re-explain the outstanding amount and payment options.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_options",
+              "response": "Excellent! Let's discuss your payment options. We offer several convenient methods..."
+            },
+            "negative": {
+              "next": "payment_clarification",
+              "response": "I understand.  Could you please confirm whether you're ready to pay the outstanding ₹10,000? If not, could you tell me what's preventing you from doing so?  I'm happy to answer any further questions or discuss alternative payment plans."
+            },
+            "ambiguous": {
+              "next": "payment_clarification",
+              "response": "To confirm, does that mean you understand the ₹10,000 outstanding amount and are ready to discuss payment options?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_clarification",
+            "previous_response": "unexpected_affirmative_short",
+            "response_of_previous_response": [
+              "ok",
+              "got it",
+              "okay",
+              "k",
+              "ookok got it",
+              "yes",
+              "yeah"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-12T21:57:15.653736",
+      "data": {
+        "branch_name": "handle_payment_options_ambiguous_yes",
+        "branch_data": {
+          "intent": "handle_ambiguous_yes_payment_options",
+          "bot_prompt": "If the user responds with a simple 'yes' at the payment_options stage, ask a clarifying question to determine their intent.  Confirm their understanding of the outstanding amount and their readiness to discuss payment options. If they confirm, proceed to discuss payment methods.  If not, re-explain the outstanding amount and payment options.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_options",
+              "response": "Excellent!  Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "negative": {
+              "next": "payment_clarification",
+              "response": "I understand. Could you please clarify what you mean by 'yes'? Are you ready to discuss how to pay the outstanding ₹10,000? If not, could you tell me what's preventing you from doing so? I'm happy to answer any further questions or discuss alternative payment plans."
+            },
+            "ambiguous": {
+              "next": "payment_clarification",
+              "response": "To confirm, does that mean you understand the ₹10,000 outstanding amount and are ready to discuss payment options?  Please let me know."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_options",
+            "previous_response": "ambiguous_affirmative_short",
+            "response_of_previous_response": [
+              "yes",
+              "yeah",
+              "okay",
+              "ok",
+              "k"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-12T21:57:49.419044",
+      "data": {
+        "branch_name": "handle_payment_options_clarification_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_options_clarification",
+          "bot_prompt": "If the user responds with a short, ambiguous affirmative (e.g., 'yes i confirm', 'yes', 'ok'), ask a clarifying question to confirm their understanding of the outstanding amount and their readiness to proceed with payment.  Rephrase the outstanding amount and payment necessity for clarity.  If they confirm, proceed to payment options. If not, re-explain the outstanding amount and payment options and offer to answer further questions.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_options",
+              "response": "Excellent! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "negative": {
+              "next": "payment_clarification",
+              "response": "I understand. Could you please clarify what you mean by your confirmation? Are you ready to pay the outstanding ₹10,000 to renew your policy? If not, could you tell me what's preventing you from doing so? I'm happy to answer any further questions or discuss alternative payment plans."
+            },
+            "ambiguous": {
+              "next": "payment_clarification",
+              "response": "To confirm, does that mean you understand the ₹10,000 outstanding amount and are ready to discuss payment options?  To renew your ValuEnable Shield Plan, this payment is necessary. Please let me know."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_options_clarification",
+            "previous_response": "unexpected_affirmative_short",
+            "response_of_previous_response": [
+              "yes i confirm",
+              "yes",
+              "okay",
+              "ok",
+              "k",
+              "confirm"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T00:51:17.753998",
+      "data": {
+        "branch_name": "handle_policy_confirmation_unexpected_yes",
+        "branch_data": {
+          "intent": "handle_unexpected_yes_from_policy_confirmation",
+          "bot_prompt": "If the user responds with 'yes' at the policy_confirmation stage, ask a clarifying question to determine their intent.  Rephrase the outstanding amount and payment necessity for clarity. If they confirm readiness to pay, proceed to payment options. If not, re-explain the outstanding amount, payment options, and offer to answer further questions.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_options",
+              "response": "Excellent! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "negative": {
+              "next": "payment_clarification",
+              "response": "I understand. Could you please clarify what you mean by 'yes'? Are you ready to discuss how to pay the outstanding ₹10,000? If not, could you tell me what's preventing you from doing so? I'm happy to answer any further questions or discuss alternative payment plans."
+            },
+            "ambiguous": {
+              "next": "payment_clarification",
+              "response": "To confirm, does that mean you understand the ₹10,000 outstanding amount and are ready to discuss payment options?  To renew your ValuEnable Shield Plan, this payment is necessary. Please let me know."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_confirmation",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "yes"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T01:16:03.252935",
+      "data": {
+        "branch_name": "handle_intro_and_consent_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_intro_and_consent",
+          "bot_prompt": "If the user provides a short, affirmative response (e.g., 'go ahead', 'okay', 'sure', 'yes') that isn't explicitly listed as 'yes' or 'ok' in the expected responses for the 'intro_and_consent' stage, ask a clarifying question to confirm their consent to discuss the policy renewal. Rephrase the purpose of the call to ensure clarity.  If they confirm, proceed to policy confirmation. If not, proceed to the check_reschedule stage.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "policy_confirmation",
+              "response": "Great! Let's proceed.  This call is regarding the renewal of your ValuEnable Shield Plan (policy number VE12345678). We need to discuss the outstanding payment of ₹10,000."
+            },
+            "negative": {
+              "next": "check_reschedule",
+              "response": "I understand.  Would you be available at another time to discuss this?  Please let me know what time works best for you."
+            },
+            "ambiguous": {
+              "next": "check_reschedule",
+              "response": "Could you please clarify? Are you happy for me to discuss your policy renewal now?  If not, we can reschedule this call."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "intro_and_consent",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "go ahead",
+              "okay",
+              "sure",
+              "yes",
+              "alright"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T01:16:29.940898",
+      "data": {
+        "branch_name": "handle_policy_confirmation_unexpected_yes",
+        "branch_data": {
+          "intent": "handle_unexpected_yes_from_policy_confirmation",
+          "bot_prompt": "If the user responds with 'yes' at the policy_confirmation stage, ask a clarifying question about their readiness to pay the outstanding amount.  Rephrase the outstanding amount and payment necessity for clarity. If they confirm readiness to pay, proceed to payment options. If not, re-explain the outstanding amount, payment options, and offer to answer further questions.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_options",
+              "response": "Excellent! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "negative": {
+              "next": "payment_clarification",
+              "response": "I understand. Could you please clarify what you mean by 'yes'? Are you ready to discuss how to pay the outstanding ₹10,000? If not, could you tell me what's preventing you from doing so? I'm happy to answer any further questions or discuss alternative payment plans."
+            },
+            "ambiguous": {
+              "next": "payment_clarification",
+              "response": "To confirm, does that mean you understand the ₹10,000 outstanding amount and are ready to discuss payment options? To renew your ValuEnable Shield Plan, this payment is necessary. Please let me know."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_confirmation",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "yes"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T01:44:58.100812",
+      "data": {
+        "branch_name": "handle_policy_status_intro_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_status_intro",
+          "bot_prompt": "If the user responds with a short, non-committal response (e.g., 'ok', 'okay', 'k', 'alright') at the policy_status_intro stage, reiterate the policy status and outstanding amount. Then, ask the user if they want to discuss payment options or need clarification on the outstanding amount.",
+          "expected_user_responses": {
+            "wants_to_pay": {
+              "keywords": [
+                "yes",
+                "payment",
+                "pay",
+                "options",
+                "proceed"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "why",
+                "how",
+                "breakdown",
+                "question"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand. Let's clarify the outstanding amount.  The ₹10,000 is due because [brief explanation of calculation/reason for outstanding amount]. Does this explanation make sense?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, are you ready to discuss your payment options for the outstanding ₹10,000, or would you like me to explain the calculation in more detail?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "introduce_policy_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "ok",
+              "okay",
+              "k",
+              "alright"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T01:54:17.039504",
+      "data": {
+        "branch_name": "handle_policy_status_intro_unexpected_yes",
+        "branch_data": {
+          "intent": "handle_unexpected_yes_from_policy_status_intro",
+          "bot_prompt": "If the user responds with 'yes' at the policy_status_intro stage without clearly indicating their intent, ask a clarifying question to determine whether they want to discuss payment options or need clarification on the outstanding amount. Reiterate the policy status and outstanding amount for clarity.",
+          "expected_user_responses": {
+            "wants_to_pay": {
+              "keywords": [
+                "yes",
+                "payment",
+                "pay",
+                "options",
+                "proceed",
+                "okay",
+                "ok"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "why",
+                "how",
+                "breakdown",
+                "question",
+                "what",
+                "no"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand. Let's clarify the outstanding amount. The ₹10,000 is due because your policy renewal was not processed on time. Does this explanation make sense?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, are you ready to discuss your payment options for the outstanding ₹10,000, or would you like me to explain the calculation in more detail?  Please clarify your response of 'yes'."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "introduce_policy_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "yes"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T02:25:12.171281",
+      "data": {
+        "branch_name": "handle_policy_status_explanation_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_status_explanation",
+          "bot_prompt": "If the user responds with a short, non-committal response (e.g., 'ok', 'okay', 'k', 'alright') at the policy_status_explanation stage, reiterate the policy status and outstanding amount. Then, offer options to proceed: discuss payment options, get a more detailed explanation of the policy status, or clarify the outstanding amount calculation.",
+          "expected_user_responses": {
+            "wants_payment_options": {
+              "keywords": [
+                "payment options",
+                "pay",
+                "options",
+                "how to pay",
+                "proceed",
+                "payment",
+                "pay now"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_policy_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "what happens",
+                "tell me more",
+                "status",
+                "policy details"
+              ],
+              "next": "explain_policy_loss",
+              "response": "Certainly. Your policy is currently discontinued due to the outstanding payment. This means [explain consequences of discontinuation].  Is there anything else I can clarify regarding the policy's status?"
+            },
+            "needs_amount_clarification": {
+              "keywords": [
+                "clarify amount",
+                "why 10000",
+                "how was this calculated",
+                "breakdown",
+                "details amount",
+                "explain amount"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand. Let's clarify the outstanding amount. The ₹10,000 is due because [explain calculation/reason for outstanding amount]. Does this explanation make sense?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, would you like to discuss your payment options for the outstanding ₹10,000, receive a more detailed explanation of your policy's status, or would you like a more detailed breakdown of how the ₹10,000 was calculated?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "explain_current_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "ok",
+              "okay",
+              "k",
+              "alright",
+              "ok.",
+              "Okay",
+              "K"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T02:31:13.908834",
+      "data": {
+        "branch_name": "handle_policy_status_explanation_unexpected_short_affirmative",
+        "branch_data": {
+          "intent": "handle_unexpected_short_affirmative_policy_status_explanation",
+          "bot_prompt": "If the user responds with a short, non-committal affirmative response (e.g., 'sure', 'ok', 'okay', 'k') at the policy_status_explanation stage, reiterate the policy status and outstanding amount. Then, offer options to proceed: discuss payment options, get a more detailed explanation of the outstanding amount, or clarify the policy status itself.",
+          "expected_user_responses": {
+            "wants_payment_options": {
+              "keywords": [
+                "payment options",
+                "pay",
+                "options",
+                "how to pay",
+                "proceed",
+                "payment",
+                "pay now",
+                "yes"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_amount_clarification": {
+              "keywords": [
+                "clarify amount",
+                "why 10000",
+                "how was this calculated",
+                "breakdown",
+                "details amount",
+                "explain amount",
+                "why",
+                "how"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand. Let's clarify the outstanding amount. The ₹10,000 is due because your policy renewal payment was past the due date of June 12th, 2025.  Does this explanation make sense?"
+            },
+            "needs_policy_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "what happens",
+                "tell me more",
+                "status",
+                "policy details",
+                "policy status"
+              ],
+              "next": "explain_policy_loss",
+              "response": "Certainly. Your policy is currently discontinued due to the outstanding payment. This means your coverage is temporarily suspended.  Is there anything else I can clarify regarding the policy's status?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, would you like to discuss your payment options for the outstanding ₹10,000, receive a more detailed explanation of why this amount is outstanding, or would you like a clarification on your policy's current status?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "explain_current_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "sure",
+              "ok",
+              "okay",
+              "k",
+              "alright"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T02:38:29.970424",
+      "data": {
+        "branch_name": "handle_policy_status_explanation_unexpected_short_affirmative",
+        "branch_data": {
+          "intent": "handle_unexpected_short_affirmative_policy_status_explanation",
+          "bot_prompt": "If the user responds with a short, non-committal affirmative response (e.g., 'sure', 'ok', 'okay', 'k') at the policy_status_explanation stage, reiterate the policy status and outstanding amount. Then, offer options to proceed: discuss payment options, get a more detailed explanation of the outstanding amount, or clarify the policy status itself.",
+          "expected_user_responses": {
+            "wants_payment_options": {
+              "keywords": [
+                "payment options",
+                "pay",
+                "options",
+                "how to pay",
+                "proceed",
+                "payment",
+                "pay now",
+                "yes",
+                "yeah",
+                "sure",
+                "okay"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_amount_clarification": {
+              "keywords": [
+                "clarify amount",
+                "why 10000",
+                "how was this calculated",
+                "breakdown",
+                "details amount",
+                "explain amount",
+                "why",
+                "how"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand. Let's clarify the outstanding amount. The ₹10,000 is due because your policy renewal payment was past the due date of June 12th, 2025. Does this explanation make sense?"
+            },
+            "needs_policy_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "what happens",
+                "tell me more",
+                "status",
+                "policy details",
+                "policy status"
+              ],
+              "next": "explain_policy_loss",
+              "response": "Certainly. Your policy is currently discontinued due to the outstanding payment. This means your coverage is temporarily suspended. Is there anything else I can clarify regarding the policy's status?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, would you like to discuss your payment options for the outstanding ₹10,000, receive a more detailed explanation of why this amount is outstanding, or would you like a clarification on your policy's current status?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "explain_current_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "ok",
+              "okay",
+              "k",
+              "alright",
+              "ok.",
+              "Okay",
+              "K",
+              "sure"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T03:01:39.585616",
+      "data": {
+        "branch_name": "handle_general_help_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_general_help",
+          "bot_prompt": "If the user provides a short, non-committal response (e.g., 'ok', 'okay', 'k') at the general_help stage,  reiterate the policy status and outstanding amount. Then, ask the user if they are ready to discuss payment options or need further clarification on the outstanding amount or policy status.",
+          "expected_user_responses": {
+            "wants_to_pay": {
+              "keywords": [
+                "yes",
+                "payment",
+                "pay",
+                "options",
+                "proceed",
+                "okay",
+                "ok",
+                "sure",
+                "yeah"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "why",
+                "how",
+                "breakdown",
+                "question",
+                "what",
+                "no"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand.  What specifically would you like clarification on? The outstanding amount of ₹10,000? Or the policy status itself?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, are you ready to discuss your payment options for the outstanding ₹10,000, or would you like me to explain the calculation or your policy status in more detail?  Please clarify your response."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "explain_current_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "ok",
+              "okay",
+              "k",
+              "alright"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T03:17:03.661619",
+      "data": {
+        "branch_name": "handle_greeting_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_greeting",
+          "bot_prompt": "If the user's response is completely unrelated to the purpose of the call (life insurance policy renewal), politely clarify that you have the wrong number or are speaking to the wrong person.  Then, ask if the intended recipient is available or if you should try again later. If the user is the intended recipient but their response is off-topic, attempt to gently redirect them back to the call's purpose. If they remain uncooperative, proceed to the 'ask_relationship' stage.",
+          "expected_user_responses": {
+            "wrong_number": {
+              "keywords": [
+                "wrong number",
+                "not him/her",
+                "no",
+                "not here"
+              ],
+              "next": "end_call",
+              "response": "I apologize for the inconvenience. Thank you for your time."
+            },
+            "right_person_off_topic": {
+              "keywords": [
+                "*"
+              ],
+              "next": "greeting_redirect",
+              "response": "I understand, but I'm calling about Pratik Jadhav's ValuEnable Life Insurance policy. Would you be able to help me connect with him or perhaps answer a quick question about his policy?"
+            },
+            "right_person_cooperative": {
+              "keywords": [
+                "yes",
+                "available",
+                "he's here",
+                "hold on"
+              ],
+              "next": "intro_and_consent",
+              "response": "Thank you. My name is Veena, and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to Pratik Jadhav's life insurance policy. Is this the right time to speak to you regarding the renewal of his policy?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "initial_greeting",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "*"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-13T03:21:15.257323",
+      "data": {
+        "branch_name": "handle_policy_status_intro_unexpected_positive",
+        "branch_data": {
+          "intent": "handle_unexpected_positive_from_policy_status_intro",
+          "bot_prompt": "If the user responds with an unexpected positive response (e.g., 'it's perfect', 'sounds good', 'great') at the policy_status_intro stage, re-iterate the policy's discontinuance status and outstanding amount.  Then, ask the user if they want to proceed with payment options or need clarification on the outstanding amount or policy status.",
+          "expected_user_responses": {
+            "wants_to_pay": {
+              "keywords": [
+                "yes",
+                "payment",
+                "pay",
+                "options",
+                "proceed",
+                "okay",
+                "ok",
+                "sure",
+                "yeah",
+                "great",
+                "sounds good",
+                "perfect"
+              ],
+              "next": "payment_options",
+              "response": "Great! Let's discuss your payment options. We offer several convenient methods, including online transfer, cheque, and debit/credit card payments. Which method would you prefer?"
+            },
+            "needs_clarification": {
+              "keywords": [
+                "clarify",
+                "explain",
+                "details",
+                "why",
+                "how",
+                "breakdown",
+                "question",
+                "what",
+                "no"
+              ],
+              "next": "payment_clarification",
+              "response": "I understand. What specifically would you like clarification on? The outstanding amount of ₹10,000? Or the policy status itself?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "payment_options_clarification",
+              "response": "To confirm, are you ready to discuss your payment options for the outstanding ₹10,000, or would you like me to explain the calculation or your policy status in more detail? Please clarify your previous response."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "introduce_policy_status",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "it's perfect",
+              "sounds good",
+              "great"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "timestamp": "2025-07-13T03:21:15.257323"
+}

@@ -1,0 +1,9 @@
+{
+    "conversation_stage": "greeting",
+    "language_preference": "English",
+    "user_agreed_to_pay": null,
+    "callback_scheduled": false,
+    "user_reason_for_non_payment": null,
+    "last_intent": null,
+    "chat_history": []
+}

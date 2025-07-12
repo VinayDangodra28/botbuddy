@@ -1,0 +1,978 @@
+{
+    "greeting": {
+        "intent": "initial_greeting",
+        "bot_prompt": "Hello and very Good Morning Sir, May I speak with {policy_holder_name}?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["hmm", "yes", "speaking", "this is", "i am", "here"],
+                "next": "intro_and_consent",
+                "response": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?"
+            },
+            "no": {
+                "keywords": ["no", "not here", "not available"],
+                "next": "ask_relationship",
+                "response": "May I know your relationship with {policy_holder_name}?"
+            },
+            "busy_or_irritated": {
+                "keywords": ["busy", "later", "call back", "not good time"],
+                "next": "check_reschedule",
+                "response": "It will take just 2 minutes of your time. Can we discuss it right now or should I reschedule your call at a better time?"
+            },
+            "unexpected": {
+                "keywords": ["*"],
+                "next": "unexpected_response_handler",
+                "response": null
+            }
+        }
+    },
+    "ask_relationship": {
+        "intent": "relationship_check",
+        "bot_prompt": "May I know your relationship with {policy_holder_name}?",
+        "expected_user_responses": {
+            "defines_relationship": {
+                "keywords": ["son", "daughter", "wife", "husband", "father", "mother", "brother", "sister", "relative", "family"],
+                "next": "policy_handling_check",
+                "response": "Do you handle {policy_holder_name}'s life insurance policy number {policy_number}? Are you aware of the details of this policy?"
+            },
+            "friend_or_other": {
+                "keywords": ["friend", "neighbor", "colleague", "know him", "know her"],
+                "next": "schedule_callback",
+                "response": "I understand. I'll call back when {policy_holder_name} is available."
+            },
+            "refuses_to_answer": {
+                "keywords": ["none of your business", "won't tell", "private", "why"],
+                "next": "schedule_callback",
+                "response": "I understand your privacy concern. I'll call back when {policy_holder_name} is available."
+            },
+            "confused": {
+                "keywords": ["confused", "don't understand", "what"],
+                "next": "explain_call_purpose",
+                "response": null
+            }
+        }
+    },
+    "policy_handling_check": {
+        "intent": "policy_awareness_check",
+        "bot_prompt": "Do you handle {policy_holder_name}'s life insurance policy number {policy_number}? Are you aware of the details of this policy?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "know", "aware", "handle"],
+                "next": "policy_status_intro",
+                "response": "Perfect! I'm calling because your policy number {policy_number} has an overdue premium of ₹{outstanding_amount} that was due on {premium_due_date}. Your policy is currently inactive, but I can help you reactivate it. Are these details correct?"
+            },
+            "no": {
+                "keywords": ["no", "don't know", "not aware", "don't handle"],
+                "next": "schedule_callback",
+                "response": "I'll call back when {policy_holder_name} is available."
+            }
+        }
+    },
+    "intro_and_consent": {
+        "intent": "introduction_consent",
+        "bot_prompt": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "okay", "fine", "go ahead", "sure", "right time", "absolutely", "proceed", "continue"],
+                "next": "policy_status_intro",
+                "response": "Perfect! I'm calling because your policy number {policy_number} has an overdue premium of ₹{outstanding_amount} that was due on {premium_due_date}. Your policy is currently inactive, but I can help you reactivate it. Are these details correct?"
+            },
+            "no": {
+                "keywords": ["no", "not now", "later", "busy", "not good time", "call back"],
+                "next": "check_reschedule",
+                "response": null
+            },
+            "has_questions": {
+                "keywords": ["what about", "regarding what", "which policy", "what policy", "questions"],
+                "next": "policy_status_intro",
+                "response": "I'm calling because your policy number {policy_number} has an overdue premium of ₹{outstanding_amount} that was due on {premium_due_date}. Your policy is currently inactive, but I can help you reactivate it. Are these details correct?"
+            }
+        }
+    },
+    "check_reschedule": {
+        "intent": "reschedule_offer",
+        "bot_prompt": "It will take just 2 minutes of your time. Can we discuss it right now or should I reschedule your call at a better time?",
+        "expected_user_responses": {
+            "talk_now": {
+                "keywords": ["now", "ok", "fine", "yes"],
+                "next": "policy_status_intro",
+                "response": null
+            },
+            "reschedule": {
+                "keywords": ["later", "reschedule", "call back", "another time"],
+                "next": "schedule_callback",
+                "response": "When would be a convenient time to call you again to provide the information about your policy with us? Please can you give a time and date?"
+            }
+        }
+    },
+    "schedule_callback": {
+        "intent": "callback_confirmed",
+        "bot_prompt": "Thank you sir/ma'am, I will arrange your call back at the given time.",
+        "next": "closure"
+    },
+    "policy_confirmation": {
+        "intent": "confirm_policy",
+        "bot_prompt": "Let me provide the complete details: Your ValuEnable Life {product_name} policy started on {policy_start_date}. You've invested {total_premium_paid} so far. Your current fund value is ₹{fund_value}. The policy provides life cover of ₹{sum_assured}, but this cover is currently inactive due to the unpaid premium. Would you like to continue with reactivating your policy?",
+        "expected_user_responses": {
+            "wants_to_reactivate": {
+                "keywords": ["yes", "reactivate", "continue", "restore"],
+                "next": "payment_followup",
+                "response": "Excellent! Let's proceed with reactivating your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "has_concerns": {
+                "keywords": ["concerns", "worried", "questions", "but"],
+                "next": "payment_inquiry",
+                "response": "I understand your concerns. Could you share what's preventing you from continuing with the policy?"
+            },
+            "disputes_details": {
+                "keywords": ["wrong", "incorrect", "not right", "different"],
+                "next": "clarify_details",
+                "response": "Let me verify the details again. Can you please help me understand what seems incorrect?"
+            },
+            "wants_to_understand_benefits": {
+                "keywords": ["benefits", "what do I get", "worth it", "why continue"],
+                "next": "explain_policy_loss",
+                "response": null
+            },
+            "confused_or_overwhelmed": {
+                "keywords": ["confused", "too much", "slow down", "don't understand"],
+                "next": "default_fallback",
+                "response": null
+            }
+        }
+    },
+    "payment_inquiry": {
+        "intent": "payment_reason_inquiry",
+        "bot_prompt": "Could you please let me know why you haven't been able to pay the premium?",
+        "expected_user_responses": {
+            "financial_problem_or_other_reason": {
+                "keywords": ["financial", "money", "problem", "issue", "difficult", "difficulties"],
+                "next": "explain_policy_loss",
+                "response": "I would like to inform you that the due date for renewal premium payment for your policy was on {premium_due_date}. The grace period is over and you are losing the benefit of your plan. Would you like to know what your policy's benefits you could get if you resume paying premiums?"
+            },
+            "already_paid": {
+                "keywords": ["paid", "already", "done"],
+                "next": "payment_already_made",
+                "response": null
+            },
+            "no_policy_bond": {
+                "keywords": ["bond", "document", "policy paper"],
+                "next": "policy_bond_help",
+                "response": null
+            },
+            "can't_pay": {
+                "keywords": ["can't pay", "won't pay", "unable to pay"],
+                "next": "financial_problem_handling",
+                "response": null
+            },
+            "refuses_payment": {
+                "keywords": ["no", "won't", "can't", "refuse"],
+                "next": "rebuttals",
+                "response": null
+            },
+            "market_high": {
+                "keywords": ["market", "high", "fall", "timing", "wait"],
+                "next": "scenario_market_high",
+                "response": null
+            },
+            "single_premium_told": {
+                "keywords": ["single premium", "one time", "told me", "agent said"],
+                "next": "scenario_single_premium",
+                "response": null
+            },
+            "emergency_needs": {
+                "keywords": ["emergency", "medical", "urgent", "hospital", "need money"],
+                "next": "scenario_emergency_needs",
+                "response": null
+            },
+            "better_alternatives": {
+                "keywords": ["mutual fund", "better alternative", "business", "other investment"],
+                "next": "scenario_better_alternatives",
+                "response": null
+            },
+            "low_returns": {
+                "keywords": ["low returns", "poor performance", "not satisfied", "bad returns"],
+                "next": "scenario_low_returns",
+                "response": null
+            },
+            "buying_new_policy": {
+                "keywords": ["new policy", "another policy", "buying new", "fresh policy"],
+                "next": "scenario_new_policy",
+                "response": null
+            },
+            "unexpected_reason": {
+                "keywords": ["*"],
+                "next": "error_fallback",
+                "response": null
+            }
+        }
+    },
+    "clarify_details": {
+        "intent": "detail_clarification",
+        "bot_prompt": "Let me verify the details again. Can you please help me understand what seems incorrect?",
+        "expected_user_responses": {
+            "clarifies_issue": {
+                "keywords": ["amount", "date", "policy number", "name"],
+                "next": "payment_inquiry",
+                "response": "Thank you for the clarification. Now, could you please let me know why you haven't been able to pay the premium?"
+            },
+            "confirms_after_clarification": {
+                "keywords": ["yes", "correct now", "right now", "ok now"],
+                "next": "payment_inquiry",
+                "response": "Thank you for confirming. Could you please let me know why you haven't been able to pay the premium?"
+            }
+        }
+    },
+    "explain_policy_loss": {
+        "intent": "benefit_explanation",
+        "bot_prompt": "Sir, you will get maximum Allocation in the Invested Fund i.e., % of Premium which will boost up your investment. Allocation in renewal premiums is much higher than the first year premium. Renewal premiums also provide tax saving benefits under Sec 80(c), 10(10(D)) as per Indian tax laws. Does this help you make a more informed decision about your policy?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "understand", "fine"],
+                "next": "payment_followup"
+            },
+            "no": {
+                "keywords": ["no", "not interested", "don't want"],
+                "next": "rebuttals"
+            },
+            "explain_more": {
+                "keywords": ["explain more", "don't understand", "details", "how much"],
+                "next": "tax_benefit_explanation",
+                "response": null
+            },
+            "confused": {
+                "keywords": ["confused", "too complex", "simple language"],
+                "next": "simple_explanation",
+                "response": null
+            }
+        }
+    },
+    "payment_followup": {
+        "intent": "payment_mode_check",
+        "bot_prompt": "May I know how you plan to make the payment? Will it be via cash, cheque, or online?",
+        "expected_user_responses": {
+            "online": {
+                "keywords": ["online", "internet", "digital", "phone", "app"],
+                "next": "payment_details",
+                "response": "Great! For online payment, you can use Debit/Credit card, Net Banking, PhonePe, Whatsapp or Google Pay. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?"
+            },
+            "cheque_or_other": {
+                "keywords": ["cheque", "check", "cash", "demand draft"],
+                "next": "payment_details",
+                "response": "I understand. However, online payment is much faster and convenient. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?"
+            },
+            "branch_visit": {
+                "keywords": ["branch", "office", "visit", "go to"],
+                "next": "payment_details",
+                "response": "You can conveniently pay the premium from home using our secure online portal. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?"
+            },
+            "tentative_date": {
+                "keywords": ["tomorrow", "next week", "soon", "later"],
+                "next": "payment_details",
+                "response": "When would you prefer to make the payment? I can send you a reminder and payment link. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?"
+            },
+            "confirmed_payment_time": {
+                "keywords": ["today", "now", "immediately", "right now"],
+                "next": "payment_details",
+                "response": "Excellent! I'll note that you'll pay on {payment_date} at {payment_time}. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?"
+            }
+        }
+    },
+    "payment_details": {
+        "intent": "payment_confirmation",
+        "bot_prompt": "Perfect! I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?",
+        "expected_user_responses": {
+            "yes_today": {
+                "keywords": ["yes", "today", "now", "sure"],
+                "next": "closure",
+                "response": "Wonderful! I'm sending the payment link now. Please complete the payment and we'll update your policy status immediately. Thank you for choosing ValuEnable!"
+            },
+            "later_today": {
+                "keywords": ["later", "evening", "tonight"],
+                "next": "closure",
+                "response": "That's fine. I'm sending the link now. Please complete it by end of day. We'll follow up tomorrow if needed."
+            },
+            "tomorrow_or_later": {
+                "keywords": ["tomorrow", "next week", "few days"],
+                "next": "closure",
+                "response": "I understand. I'm sending the payment link which will be valid for 7 days. May I call you tomorrow to confirm the payment?"
+            },
+            "need_help": {
+                "keywords": ["help", "don't know how", "not sure", "guide me"],
+                "next": "closure",
+                "response": "No problem! I'll send you step-by-step instructions along with the payment link. Our customer support is also available at 1800-200-5021."
+            },
+            "refuse_or_delay": {
+                "keywords": ["not today", "maybe later", "think about it"],
+                "next": "closure",
+                "response": "I understand your concern. Remember, your policy is currently inactive. I'll keep the payment link active for 7 days. Can I call back in 2 days?"
+            }
+        }
+    },
+    "payment_already_made": {
+        "intent": "payment_confirmation",
+        "bot_prompt": "Thank you for making the payment. May I know when you made the payment?",
+        "expected_user_responses": {
+            "provides_date": {
+                "keywords": ["today", "yesterday", "last week", "few days ago", "recently"],
+                "next": "payment_verification",
+                "response": "May I know where you made the payment (online, cheque, or cash)?"
+            },
+            "provides_mode_and_date": {
+                "keywords": ["online today", "cheque yesterday", "cash last week"],
+                "next": "payment_verification",
+                "response": "Could you please provide the transaction id or reference id? For cheque payments, we'll need the cheque number."
+            },
+            "unsure_about_date": {
+                "keywords": ["not sure", "don't remember", "some time ago"],
+                "next": "payment_verification",
+                "response": "No problem. Could you tell me how you made the payment - online, cheque, or cash?"
+            },
+            "payment_not_reflected": {
+                "keywords": ["not showing", "not updated", "still showing due"],
+                "next": "payment_investigation",
+                "response": null
+            }
+        }
+    },
+    "policy_bond_help": {
+        "intent": "help_policy_bond",
+        "bot_prompt": "You can download the policy bond via WhatsApp. Please message us from your registered number on 8806727272.",
+        "expected_user_responses": {
+            "acknowledges": {
+                "keywords": ["ok", "thank you", "will do", "got it"],
+                "next": "payment_inquiry",
+                "response": "Great! Once you have the policy document, could you please let me know why you haven't been able to pay the premium?"
+            },
+            "still_confused": {
+                "keywords": ["confused", "don't understand", "how"],
+                "next": "policy_bond_detailed_help",
+                "response": null
+            },
+            "no_whatsapp": {
+                "keywords": ["no whatsapp", "don't have whatsapp", "no smartphone"],
+                "next": "policy_bond_alternative",
+                "response": null
+            }
+        }
+    },
+    "financial_problem_handling": {
+        "intent": "financial_constraint",
+        "bot_prompt": "I understand your concern. To achieve your financial goals, staying invested is key. You can pay via credit card, EMI, or change payment mode to monthly. Can you arrange the premium to continue benefits?",
+        "expected_user_responses": {
+            "yes_can_arrange": {
+                "keywords": ["yes", "can arrange", "will try", "ok"],
+                "next": "payment_followup",
+                "response": "Excellent! Let's discuss the best payment option for you. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "monthly_payment": {
+                "keywords": ["monthly", "emi", "installments"],
+                "next": "payment_mode_change",
+                "response": null
+            },
+            "credit_card_option": {
+                "keywords": ["credit card", "card"],
+                "next": "payment_followup",
+                "response": "Great! Credit card payment is convenient and you can pay in EMIs if needed. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "still_cant_pay": {
+                "keywords": ["can't", "unable", "difficult", "no money"],
+                "next": "rebuttals",
+                "response": null
+            },
+            "need_time": {
+                "keywords": ["time", "later", "think"],
+                "next": "schedule_callback",
+                "response": "I understand. When would be a good time to call you back to discuss this further?"
+            }
+        }
+    },
+    "rebuttals": {
+        "intent": "rebuttal_for_refusal",
+        "bot_prompt": "You can opt for Partial Withdrawal after completing 5 years. If you stop before that, you'll get only 4–4.5% returns and lose your sum assured of {sum_assured}. If you continue, at maturity you'll receive {fund_value}. Would you be willing to pay now?",
+        "expected_user_responses": {
+            "maybe_later": {
+                "keywords": ["later", "think", "consider"],
+                "next": "schedule_callback"
+            },
+            "no": {
+                "keywords": ["no", "not interested", "won't pay"],
+                "next": "closure"
+            },
+            "yes": {
+                "keywords": ["yes", "ok", "pay"],
+                "next": "payment_followup",
+                "response": "Great! We can help you switch to debt funds and use Auto-transfer Portfolio strategy to systematically move to equity when markets are favorable. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            }
+        }
+    },
+    "closure": {
+        "intent": "end_conversation",
+        "bot_prompt": "For any further assistance with your policy, feel free to call our helpline at 1800 209 7272, message us on WhatsApp at 8806 727272, mail us, or visit our website. Thank you for your valuable time. Have a great day ahead.",
+        "action": "END_CALL"
+    },
+    "scenario_market_high": {
+        "intent": "market_timing_objection",
+        "bot_prompt": "I understand your concern about market timing. However, there are specific due dates for premium payments. Your life insurance worth ₹{sum_assured} has been reduced to NIL as you wait. You can choose debt-oriented funds with lower risk - our Bond Fund has 5-year returns of 5.45%. Would you like to continue with reduced risk funds?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "understand", "fine", "agree"],
+                "next": "payment_followup",
+                "response": "Great! We can help you switch to debt funds and use Auto-transfer Portfolio strategy to systematically move to equity when markets are favorable. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "not interested", "still concerned"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_single_premium": {
+        "intent": "single_premium_misconception",
+        "bot_prompt": "I understand the confusion. Your policy document shows PPT 7 years, meaning 7 premium payments. By discontinuing, you're missing value in 2 ways: your money goes to low-yield Discontinued Fund (4.30% vs Pure Stock Fund's 16.91%), and you lose ₹{sum_assured} life cover. Continue paying to keep your ₹{sum_assured} cover and access market-linked funds. Would you like to continue?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "understand", "continue"],
+                "next": "payment_followup",
+                "response": "Excellent! You'll also get loyalty additions of ₹22,000 over the policy term. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "still confused", "not convinced"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_emergency_needs": {
+        "intent": "emergency_financial_needs",
+        "bot_prompt": "I understand medical emergencies are urgent. However, by not paying premium, your ₹{sum_assured} life insurance has reduced to NIL. I suggest paying via credit card now, then switching to monthly/quarterly payments. After 5 years, you can use partial withdrawal for emergencies. Can you pay via credit card?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "credit card", "can pay"],
+                "next": "payment_followup",
+                "response": "Perfect! We'll process your credit card payment and set up convenient payment frequency for future premiums. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "can't", "don't have credit card"],
+                "next": "financial_problem_handling",
+                "response": null
+            }
+        }
+    },
+    "scenario_better_alternatives": {
+        "intent": "alternative_investment_objection",
+        "bot_prompt": "Before deciding, compare effective charges. Most mutual funds charge 2% expense ratio without life cover. Your policy's effective charges reduce to just 1.61% for remaining term, plus you get ₹{sum_assured} life cover and loyalty additions of ₹22,000. These benefits aren't available in mutual funds. Would you like to continue?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "continue", "makes sense"],
+                "next": "payment_followup",
+                "response": "Smart choice! Your policy provides better value with insurance cover and lower effective charges. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "still prefer", "not convinced"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_low_returns": {
+        "intent": "returns_dissatisfaction",
+        "bot_prompt": "Actually, you've earned 11.47% annualized effective returns post all charges and taxes! Your effective charges reduce sharply from 3.89% till date to just 1.61% for remaining term. You can switch to any fund based on your risk appetite. Would you like to explore better fund options?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "interested", "want to know"],
+                "next": "payment_followup",
+                "response": "Great! Let's discuss fund switching options to optimize your returns while continuing your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "still not satisfied", "not interested"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "scenario_new_policy": {
+        "intent": "new_policy_consideration",
+        "bot_prompt": "ULIPs have higher charges in initial years. Your current policy's effective charges for remaining term is only 1.61% - much cheaper than any new ULIP. For diversification, you can switch part of your funds to debt funds within this policy. Would you like to continue this policy instead?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "makes sense", "continue this"],
+                "next": "payment_followup",
+                "response": "Wise decision! We can help you diversify your asset allocation within your existing policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "still want new", "prefer new policy"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "tax_benefit_explanation": {
+        "intent": "tax_benefit_info",
+        "bot_prompt": "Your policy provides tax benefits under Section 80C for premium payments and Section 10(10D) for maturity proceeds. This reduces your effective cost significantly. Combined with insurance cover and investment returns, would you like to continue to get these tax advantages?",
+        "expected_user_responses": {
+            "yes": {
+                "keywords": ["yes", "ok", "understand", "interested"],
+                "next": "payment_followup",
+                "response": "Excellent! Tax benefits make your policy even more valuable financially. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "no": {
+                "keywords": ["no", "not interested", "don't care about tax"],
+                "next": "rebuttals",
+                "response": null
+            },
+            "explain_more": {
+                "keywords": ["explain", "how much", "details", "more info"],
+                "next": "tax_benefit_details",
+                "response": null
+            }
+        }
+    },
+    "policy_bond_detailed_help": {
+        "intent": "detailed_bond_help",
+        "bot_prompt": "To download your policy bond: 1) Open WhatsApp on your phone, 2) Send a message to 8806727272 from your registered mobile number, 3) Type 'Policy Bond' and your policy number {policy_number}, 4) You'll receive the document within 5 minutes. Is this clear?",
+        "expected_user_responses": {
+            "yes_clear": {
+                "keywords": ["yes", "clear", "understand", "got it"],
+                "next": "payment_inquiry",
+                "response": "Perfect! Once you have the document, could you please let me know why you haven't been able to pay the premium?"
+            },
+            "still_need_help": {
+                "keywords": ["still confused", "need help", "difficult"],
+                "next": "policy_bond_alternative",
+                "response": null
+            }
+        }
+    },
+    "policy_bond_alternative": {
+        "intent": "alternative_bond_delivery",
+        "bot_prompt": "No problem! I can email the policy bond to your registered email address, or we can courier a physical copy to your address. Which would you prefer?",
+        "expected_user_responses": {
+            "email": {
+                "keywords": ["email", "mail", "digital copy"],
+                "next": "payment_inquiry",
+                "response": "I'll arrange for the policy bond to be emailed to you within 24 hours. Now, could you please let me know why you haven't been able to pay the premium?"
+            },
+            "courier": {
+                "keywords": ["courier", "post", "physical copy", "hard copy"],
+                "next": "payment_inquiry",
+                "response": "I'll arrange for a physical copy to be couriered to your registered address within 3-5 business days. Meanwhile, could you please let me know why you haven't been able to pay the premium?"
+            }
+        }
+    },
+    "payment_mode_change": {
+        "intent": "change_payment_frequency",
+        "bot_prompt": "Great idea! We can change your payment mode to monthly instead of annual. This will reduce your payment burden. The monthly premium would be approximately {monthly_premium_amount}. Would this be more manageable for you?",
+        "expected_user_responses": {
+            "yes_monthly": {
+                "keywords": ["yes", "monthly", "better", "manageable"],
+                "next": "payment_followup",
+                "response": "Excellent! I'll set up monthly payment mode for you. Let's process your first monthly payment now. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "quarterly": {
+                "keywords": ["quarterly", "every 3 months", "quarter"],
+                "next": "payment_followup",
+                "response": "Perfect! Quarterly payments would be {quarterly_premium_amount}. This is also a good option. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "still_difficult": {
+                "keywords": ["still difficult", "too much", "can't afford"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "tax_benefit_details": {
+        "intent": "detailed_tax_explanation",
+        "bot_prompt": "Under Section 80C, you can claim up to ₹1.5 lakh deduction for premium payments, saving you ₹{tax_saving_amount} in taxes annually. Under Section 10(10D), your maturity amount of ₹{maturity_amount} will be completely tax-free. This effectively reduces your premium cost by {effective_cost_reduction}%. Would you like to continue with these benefits?",
+        "expected_user_responses": {
+            "yes_convinced": {
+                "keywords": ["yes", "convinced", "good savings", "will continue"],
+                "next": "payment_followup",
+                "response": "Smart decision! These tax benefits make your policy very cost-effective. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "need_more_info": {
+                "keywords": ["more info", "calculation", "how much exactly"],
+                "next": "detailed_calculation",
+                "response": null
+            },
+            "not_interested": {
+                "keywords": ["not interested", "don't need tax benefits", "no"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "detailed_calculation": {
+        "intent": "show_calculations",
+        "bot_prompt": "Let me show you the exact calculation: Your annual premium is ₹{annual_premium}. Tax saved under 80C (30% tax slab) = ₹{tax_saved}. Your effective premium cost = ₹{effective_cost}. At maturity, you'll receive ₹{maturity_amount} completely tax-free. Without the policy, this amount would be taxed. Does this clarify the financial benefits?",
+        "expected_user_responses": {
+            "yes_clear": {
+                "keywords": ["yes", "clear", "understand", "makes sense"],
+                "next": "payment_followup",
+                "response": "Perfect! Now you can see the real value of continuing your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "still_not_convinced": {
+                "keywords": ["still not sure", "not convinced", "need to think"],
+                "next": "schedule_callback",
+                "response": "I understand. Would you like me to send you a detailed calculation sheet and call back tomorrow?"
+            }
+        }
+    },
+    "unexpected_response_handler": {
+        "intent": "handle_unexpected",
+        "bot_prompt": "I understand your concern. Let me address that for you. Could you please elaborate on what specific aspect you'd like to discuss about your policy?",
+        "expected_user_responses": {
+            "policy_details": {
+                "keywords": ["policy", "details", "benefits", "coverage"],
+                "next": "policy_confirmation",
+                "response": null
+            },
+            "payment_related": {
+                "keywords": ["payment", "premium", "cost", "money"],
+                "next": "payment_inquiry",
+                "response": null
+            },
+            "general_query": {
+                "keywords": ["help", "information", "explain", "confused"],
+                "next": "general_help",
+                "response": null
+            },
+            "wants_to_end": {
+                "keywords": ["end call", "not interested", "busy", "goodbye"],
+                "next": "closure",
+                "response": "I understand. Thank you for your time."
+            }
+        }
+    },
+    "general_help": {
+        "intent": "provide_general_assistance",
+        "bot_prompt": "I'm here to help you with your ValuEnable Life Insurance policy. We can discuss policy benefits, payment options, or any concerns you have. What would you like to know more about?",
+        "expected_user_responses": {
+            "policy_benefits": {
+                "keywords": ["benefits", "what do I get", "coverage", "returns"],
+                "next": "explain_policy_loss",
+                "response": null
+            },
+            "payment_help": {
+                "keywords": ["payment", "how to pay", "payment options"],
+                "next": "payment_followup",
+                "response": null
+            },
+            "policy_status": {
+                "keywords": ["status", "current situation", "what happened"],
+                "next": "policy_confirmation",
+                "response": null
+            }
+        }
+    },
+    "error_fallback": {
+        "intent": "error_handling",
+        "bot_prompt": "I apologize for any confusion. Let me connect you with our customer service team who can better assist you with your specific query. You can reach them at 1800 209 7272. Would you like me to arrange a callback from a specialist?",
+        "expected_user_responses": {
+            "yes_callback": {
+                "keywords": ["yes", "callback", "specialist", "connect"],
+                "next": "schedule_callback",
+                "response": null
+            },
+            "no_direct_call": {
+                "keywords": ["no", "will call myself", "direct"],
+                "next": "closure",
+                "response": "Understood. Please call us at 1800 209 7272 for any assistance. Thank you for your time."
+            }
+        }
+    },
+    "explain_call_purpose": {
+        "intent": "explain_why_calling",
+        "bot_prompt": "I'm calling from ValuEnable Life Insurance about {policy_holder_name}'s life insurance policy. We're trying to help with the policy renewal. Since you're not a family member, I'll need to speak directly with {policy_holder_name}. When would be a good time to call back?",
+        "expected_user_responses": {
+            "provides_time": {
+                "keywords": ["evening", "morning", "afternoon", "tomorrow", "weekend"],
+                "next": "schedule_callback",
+                "response": null
+            },
+            "not_available": {
+                "keywords": ["not available", "won't be here", "travels", "moved"],
+                "next": "alternative_contact",
+                "response": null
+            }
+        }
+    },
+    "payment_verification": {
+        "intent": "verify_payment_details",
+        "bot_prompt": "Thank you for the information. Let me check our records to confirm your payment. Could you please provide the transaction reference number or cheque number?",
+        "expected_user_responses": {
+            "provides_reference": {
+                "keywords": ["transaction", "reference", "cheque number", "receipt"],
+                "next": "payment_confirmation_check",
+                "response": "Thank you! Let me verify this in our system. I'll check and confirm if the payment has been processed."
+            },
+            "no_reference": {
+                "keywords": ["don't have", "lost", "no reference", "don't remember"],
+                "next": "payment_investigation",
+                "response": null
+            }
+        }
+    },
+    "payment_investigation": {
+        "intent": "investigate_payment_issue",
+        "bot_prompt": "I understand your concern. Sometimes there can be a delay in payment reflection due to processing time. Let me escalate this to our accounts team for immediate investigation. They will contact you within 24 hours with an update. Is that acceptable?",
+        "expected_user_responses": {
+            "yes_acceptable": {
+                "keywords": ["yes", "ok", "fine", "acceptable"],
+                "next": "closure",
+                "response": "Perfect! Our accounts team will call you within 24 hours. Meanwhile, your policy status will be protected."
+            },
+            "wants_immediate_resolution": {
+                "keywords": ["now", "immediate", "urgent", "today"],
+                "next": "escalation_immediate",
+                "response": null
+            }
+        }
+    },
+    "payment_confirmation_check": {
+        "intent": "confirm_payment_in_system",
+        "bot_prompt": "Great news! I can see your payment has been processed successfully on {payment_date}. Your policy status has been updated to 'Active' and your life cover of ₹{sum_assured} is now restored. Thank you for keeping your policy current!",
+        "expected_user_responses": {
+            "acknowledges": {
+                "keywords": ["thank you", "good", "great", "relief"],
+                "next": "closure",
+                "response": "You're welcome! For any future assistance, feel free to contact us."
+            },
+            "asks_about_next_premium": {
+                "keywords": ["next payment", "when is next", "next premium"],
+                "next": "next_premium_info",
+                "response": null
+            }
+        }
+    },
+    "alternative_contact": {
+        "intent": "find_alternative_contact",
+        "bot_prompt": "Could you provide an alternative contact number or the best way to reach {policy_holder_name}? This is important regarding their insurance policy.",
+        "expected_user_responses": {
+            "provides_contact": {
+                "keywords": ["mobile", "phone", "number", "contact"],
+                "next": "closure",
+                "response": "Thank you! I'll contact {policy_holder_name} on the provided number."
+            },
+            "no_contact": {
+                "keywords": ["don't know", "no contact", "can't help"],
+                "next": "closure",
+                "response": "I understand. I'll try calling again later. Thank you for your time."
+            }
+        }
+    },
+    "escalation_immediate": {
+        "intent": "immediate_escalation",
+        "bot_prompt": "I understand the urgency. Let me connect you immediately with our senior customer service executive who can resolve this right away. Please hold for 2 minutes while I transfer your call. Is that okay?",
+        "expected_user_responses": {
+            "yes_hold": {
+                "keywords": ["yes", "ok", "hold", "transfer"],
+                "next": "closure",
+                "response": "Perfect! Transferring your call now. Please stay on the line."
+            },
+            "no_hold": {
+                "keywords": ["no", "can't hold", "call back"],
+                "next": "immediate_callback",
+                "response": null
+            }
+        }
+    },
+    "immediate_callback": {
+        "intent": "arrange_immediate_callback",
+        "bot_prompt": "No problem! I'll arrange for our senior executive to call you back within the next 30 minutes. Will you be available at this number?",
+        "expected_user_responses": {
+            "yes_available": {
+                "keywords": ["yes", "available", "this number"],
+                "next": "closure",
+                "response": "Excellent! Expect a call within 30 minutes. Your issue will be resolved priority."
+            },
+            "different_number": {
+                "keywords": ["different number", "other number", "mobile"],
+                "next": "closure",
+                "response": "I'll arrange the callback on your preferred number. Thank you for your patience."
+            }
+        }
+    },
+    "next_premium_info": {
+        "intent": "provide_next_premium_details",
+        "bot_prompt": "Your next premium of ₹{next_premium_amount} is due on {next_premium_date}. We'll send you a reminder 15 days before the due date. You can pay online, or we can set up auto-debit for your convenience. Would you like to set up auto-payment?",
+        "expected_user_responses": {
+            "yes_auto_payment": {
+                "keywords": ["yes", "auto payment", "auto debit", "convenient"],
+                "next": "auto_payment_setup",
+                "response": null
+            },
+            "no_auto_payment": {
+                "keywords": ["no", "manual", "will pay myself"],
+                "next": "closure",
+                "response": "That's fine! We'll send you payment reminders before the due date."
+            }
+        }
+    },
+    "auto_payment_setup": {
+        "intent": "setup_auto_payment",
+        "bot_prompt": "Excellent choice! Auto-payment ensures you never miss a premium and keeps your policy active. I'll send you the auto-debit mandate form via email and WhatsApp. Once you sign and return it, your future premiums will be automatically deducted. Sound good?",
+        "expected_user_responses": {
+            "yes_sounds_good": {
+                "keywords": ["yes", "sounds good", "perfect", "ok"],
+                "next": "closure",
+                "response": "Perfect! You'll receive the auto-debit form within 2 hours. Thank you for securing your policy with auto-payment!"
+            },
+            "wants_more_details": {
+                "keywords": ["more details", "how it works", "explain"],
+                "next": "auto_payment_details",
+                "response": null
+            }
+        }
+    },
+    "auto_payment_details": {
+        "intent": "explain_auto_payment",
+        "bot_prompt": "Auto-payment deducts your premium automatically from your bank account 3 days before the due date. You'll receive SMS/email notifications before deduction. You can cancel auto-payment anytime. It's secure and convenient. Shall I proceed with setting it up?",
+        "expected_user_responses": {
+            "yes_proceed": {
+                "keywords": ["yes", "proceed", "set it up", "ok"],
+                "next": "closure",
+                "response": "Great! I'll send you the auto-debit mandate form shortly."
+            },
+            "need_to_think": {
+                "keywords": ["think about it", "later", "not now"],
+                "next": "closure",
+                "response": "No problem! You can set up auto-payment anytime by calling our helpline."
+            }
+        }
+    },
+    "simple_explanation": {
+        "intent": "simple_benefit_explanation",
+        "bot_prompt": "Let me explain simply: Your policy gives you 3 main benefits - 1) Life insurance cover of ₹{sum_assured}, 2) Investment returns on your money, 3) Tax savings. Right now, you're losing all three by not paying. If you continue, you keep all benefits. Does this make sense?",
+        "expected_user_responses": {
+            "yes_makes_sense": {
+                "keywords": ["yes", "makes sense", "understand", "clear"],
+                "next": "payment_followup",
+                "response": "Great! So shall we proceed with continuing your policy? May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "still_confused": {
+                "keywords": ["still confused", "don't get it", "explain again"],
+                "next": "general_help",
+                "response": null
+            },
+            "not_interested": {
+                "keywords": ["not interested", "don't want", "no"],
+                "next": "rebuttals",
+                "response": null
+            }
+        }
+    },
+    "default_fallback": {
+        "intent": "handle_any_unexpected_response",
+        "bot_prompt": "I understand. Let me help you with your specific concern about the policy. Could you please tell me what's most important to you - continuing your insurance cover, understanding the payment options, or getting more information about policy benefits?",
+        "expected_user_responses": {
+            "insurance_cover": {
+                "keywords": ["insurance", "cover", "protection", "death benefit"],
+                "next": "explain_policy_loss",
+                "response": "Let me explain how your insurance cover works and what you're missing by not paying."
+            },
+            "payment_options": {
+                "keywords": ["payment", "options", "how to pay", "modes"],
+                "next": "payment_followup",
+                "response": "I'll explain all the convenient payment options available to you. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "policy_benefits": {
+                "keywords": ["benefits", "what I get", "returns", "value"],
+                "next": "explain_policy_loss",
+                "response": null
+            },
+            "end_conversation": {
+                "keywords": ["end", "finish", "goodbye", "not interested"],
+                "next": "closure",
+                "response": "I understand. Thank you for your time."
+            }
+        }
+    },
+    "policy_status_intro": {
+        "intent": "introduce_policy_status",
+        "bot_prompt": "I'm calling because your policy number {policy_number} has an overdue premium of ₹{outstanding_amount} that was due on {premium_due_date}. Your policy is currently inactive, but I can help you reactivate it. Are these details correct?",
+        "expected_user_responses": {
+            "confirms_basic_details": {
+                "keywords": ["yes", "correct", "right", "that's right", "ok", "sure", "fine", "alright"],
+                "next": "policy_status_explanation",
+                "response": "Thank you for confirming. Your policy is currently in 'Discontinuance' status, which means your life insurance cover of ₹{sum_assured} is inactive. The grace period has ended, but the good news is we can still reactivate your policy by paying the overdue premium. This is important because without payment, you lose your ₹{sum_assured} life cover completely. Would you like to proceed with reactivating your policy or do you have any questions?"
+            },
+            "disputes_basic_details": {
+                "keywords": ["no", "wrong", "incorrect", "not right"],
+                "next": "clarify_basic_details",
+                "response": null
+            },
+            "wants_full_details": {
+                "keywords": ["tell me more", "full details", "everything", "complete information"],
+                "next": "policy_confirmation",
+                "response": null
+            },
+            "has_questions": {
+                "keywords": ["questions", "want to know", "confused", "don't understand"],
+                "next": "general_help",
+                "response": null
+            },
+            "knows_and_wants_to_pay": {
+                "keywords": ["know", "aware", "want to pay", "pay now", "how to pay"],
+                "next": "payment_followup",
+                "response": "Great! Let me help you with the payment options. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            }
+        }
+    },
+    "policy_status_explanation": {
+        "intent": "explain_current_status",
+        "bot_prompt": "Your policy is currently in 'Discontinuance' status, which means your life insurance cover of ₹{sum_assured} is inactive. The grace period has ended, but the good news is we can still reactivate your policy by paying the overdue premium. This is important because without payment, you lose your ₹{sum_assured} life cover completely. Would you like to proceed with reactivating your policy or do you have any questions?",
+        "expected_user_responses": {
+            "wants_to_proceed": {
+                "keywords": ["yes", "ok", "proceed", "reactivate", "continue", "sure", "fine", "alright"],
+                "next": "payment_followup",
+                "response": "Great! Let's discuss your payment options. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "wants_to_know_importance": {
+                "keywords": ["why important", "what happens", "benefits", "tell me more"],
+                "next": "explain_policy_loss",
+                "response": null
+            },
+            "wants_payment_options": {
+                "keywords": ["payment options", "how to pay", "pay now", "payment"],
+                "next": "payment_followup",
+                "response": null
+            },
+            "asks_why_not_paid": {
+                "keywords": ["why ask", "reason", "understand"],
+                "next": "payment_inquiry",
+                "response": "Could you please let me know what prevented you from making the payment on time?"
+            },
+            "wants_full_details": {
+                "keywords": ["full details", "complete information", "everything", "all details"],
+                "next": "policy_confirmation",
+                "response": null
+            },
+            "has_questions": {
+                "keywords": ["questions", "confused", "don't understand", "what does that mean"],
+                "next": "general_help",
+                "response": null
+            }
+        }
+    },
+    "clarify_basic_details": {
+        "intent": "clarify_policy_basics",
+        "bot_prompt": "I want to make sure I have the correct information. Could you please help me verify - what policy number do you have, and what amount are you expecting to be due?",
+        "expected_user_responses": {
+            "provides_correct_details": {
+                "keywords": ["policy number", "amount", "rupees", "thousand", "lakh"],
+                "next": "policy_status_explanation",
+                "response": "Your policy is currently in 'Discontinuance' status, which means your life insurance cover of ₹{sum_assured} is inactive. The grace period has ended, but the good news is we can still reactivate your policy by paying the overdue premium. This is important because without payment, you lose your ₹{sum_assured} life cover completely. Would you like to proceed with reactivating your policy or do you have any questions?"
+            },
+            "still_confused": {
+                "keywords": ["confused", "don't know", "not sure", "don't have details"],
+                "next": "policy_bond_help",
+                "response": null
+            },
+            "wants_agent_to_confirm": {
+                "keywords": ["you tell me", "you check", "from your side"],
+                "next": "policy_confirmation",
+                "response": null
+            }
+        }
+    }
+}
