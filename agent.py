@@ -5,17 +5,19 @@ from dotenv import load_dotenv
 from prompt_builder import build_prompt, render_template
 from gemini_api import send_to_gemini
 from branches_manager import BranchesManager
+from interruption_handler import InterruptionHandler
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Get API key from environment variables
-api_key = os.getenv('GEMINI_API_KEY')
-if not api_key:
-    raise ValueError("GEMINI_API_KEY not found in environment variables. Please check your .env file.")
+# Get API key - hardcoded for reliability
+api_key = "AIzaSyCVmLsJE63bOtoUb2dHcskHdWbkCAsebdM"
 
 # Initialize Branches Manager
 branches_manager = BranchesManager("branches.json", "suggestions.json")
+
+# Initialize Interruption Handler
+interruption_handler = InterruptionHandler(branches_manager)
 
 # Load static user data
 with open('user_data.json', 'r', encoding='utf-8') as f:
@@ -232,6 +234,20 @@ def analyze_user_response_and_suggest(user_input, current_stage, user_data, sess
     only create new branch suggestion if no suitable existing branch found.
     Returns (bot_response, metadata, is_unexpected)
     """
+    # STEP 0: Check if we just returned from an interruption - be more lenient with branch creation
+    recently_returned_from_interruption = session_data.get("returned_from_interruption", False)
+    if recently_returned_from_interruption:
+        print("🔄 Recently returned from interruption - providing gentle redirect instead of creating branch")
+        # Clear the flag
+        session_data["returned_from_interruption"] = False
+        return "I understand. Let's continue with your policy details.", {
+            "intent": "gentle_redirect",
+            "update": {
+                "conversation_stage": current_stage,
+                "language_preference": session_data.get('language_preference', 'English')
+            }
+        }, False
+    
     # STEP 1: Try to find existing branch that could handle this response
     existing_branch, confidence = find_appropriate_existing_branch(user_input, current_stage)
     
@@ -293,6 +309,10 @@ RESPONSE FORMAT:
     current_branch = branches_manager.read_branch(current_stage)
     expected_responses = current_branch.get("expected_user_responses", {}) if current_branch else {}
     
+    # Get available branches list from branches.json
+    all_branches = branches_manager.read_all_branches()
+    available_branches = all_branches.get("_metadata", {}).get("available_branches", [])
+    
     # Get pending suggestions for context
     pending_suggestions = branches_manager.get_pending_suggestions()
     suggestions_context = ""
@@ -309,16 +329,28 @@ CURRENT CONVERSATION CONTEXT:
 - User data: {json.dumps(user_data, indent=2)}
 - Session data: {json.dumps(session_data, indent=2)}{suggestions_context}
 
+AVAILABLE BRANCHES (MUST USE FOR next_stage):
+{json.dumps(available_branches, indent=2)}
+
 ANALYSIS PERFORMED:
 - Checked for existing branches that could handle this response
 - Best existing match: {existing_branch or 'None'} (confidence: {confidence:.2f})
 - No suitable existing branch found, creating new branch suggestion
 
+CRITICAL INSTRUCTIONS:
+1. For "next" values in expected_user_responses, ONLY use branches from the AVAILABLE BRANCHES list above
+2. This prevents conversation loops and ensures proper flow
+3. Choose the most appropriate existing branch based on the user's likely intent after this response
+4. If user seems ready to pay → use "payment_followup" or "payment_details"
+5. If user has concerns → use "financial_problem_handling" or "rebuttals"
+6. If user wants to reschedule → use "schedule_callback"
+7. If unclear → use "policy_confirmation" or "closure"
+
 TASK: Handle this unexpected response and create a branch suggestion.
 
 1. Respond naturally to the user as Veena would handle this unexpected situation
 2. Create a branch suggestion to handle similar unexpected responses in the future
-3. Determine appropriate next stage based on the response
+3. Choose next stages ONLY from the available branches list above
 
 RESPONSE FORMAT:
 
@@ -328,7 +360,7 @@ RESPONSE FORMAT:
 {{
   "intent": "handle_unexpected_response",
   "update": {{
-    "conversation_stage": "appropriate_next_stage_based_on_response",
+    "conversation_stage": "{current_stage}_handled",
     "language_preference": "{session_data.get('language_preference', 'English')}"
   }},
   "is_unexpected": true,
@@ -336,16 +368,16 @@ RESPONSE FORMAT:
     "action": "create",
     "reasoning": "Why this new branch would help handle similar unexpected responses (no existing branch was suitable)",
     "suggestion_details": {{
-      "branch_name": "handle_{current_stage}_unexpected_response",
+      "branch_name": "{current_stage}_handled",
       "intent": "handle_unexpected_from_{current_stage}",
       "bot_prompt": "How Veena should respond to similar unexpected cases in the future",
       "expected_user_responses": {{
         "positive": {{
-          "next": "appropriate_next_stage",
+          "next": "most_appropriate_existing_branch_from_available_list",
           "response": "Follow-up response for positive reaction"
         }},
         "negative": {{
-          "next": "appropriate_fallback_stage", 
+          "next": "appropriate_fallback_existing_branch_from_available_list", 
           "response": "Follow-up response for negative reaction"
         }}
       }},
@@ -389,6 +421,153 @@ RESPONSE FORMAT:
         print(f"Error in Gemini analysis: {e}")
         return "I understand. Let me help you with this. Can you please clarify what you mean?", {}, True
 
+def process_conversation_turn(user_input, current_stage, user_data, session_data):
+    """
+    Process a single conversation turn with interruption handling.
+    
+    Returns:
+        Tuple of (bot_response, metadata, conversation_continues)
+    """
+    # STEP 0: Check if we're in an interruption flow and handle response
+    if interruption_handler.is_in_interruption_flow(session_data):
+        print(f"🔄 INTERRUPTION FLOW: Handling response to current interruption")
+        bot_response, metadata, should_continue = interruption_handler.handle_interruption_response(
+            user_input, session_data, user_data
+        )
+        
+        # ✅ IMPROVED: Check if we just resolved an interruption
+        if metadata.get("interruption_resolved"):
+            restored_stage = metadata.get("restored_to_stage")
+            print(f"✅ INTERRUPTION RESOLVED: Restored to stage '{restored_stage}'")
+            
+            # Update the current_stage for the rest of this function
+            current_stage = restored_stage
+            session_data["conversation_stage"] = restored_stage
+        
+        return bot_response, metadata, should_continue
+    
+    # ✅ IMPROVED: Handle post-interruption responses more gracefully
+    if session_data.get("returned_from_interruption", False):
+        print(f"🔄 POST-INTERRUPTION: Back at stage '{current_stage}' after interruption")
+        
+        # First check if this is a valid response for the restored stage
+        matches_expected, matched_type, scripted_response, next_stage = check_if_response_matches_expected(
+            user_input, current_stage
+        )
+        
+        if matches_expected:
+            print(f"✅ POST-INTERRUPTION MATCH: User response fits restored stage")
+            # Clear the flag and process normally
+            session_data["returned_from_interruption"] = False
+            # Continue with normal processing below
+        else:
+            # Give user another chance to respond appropriately to the restored stage
+            print(f"❓ POST-INTERRUPTION: User response doesn't fit restored stage, providing context")
+            session_data["returned_from_interruption"] = False
+            
+            # Get current stage prompt to re-contextualize
+            current_branch = branches_manager.read_branch(current_stage)
+            if current_branch:
+                stage_prompt = current_branch.get("bot_prompt", "")
+                if stage_prompt:
+                    from prompt_builder import render_template
+                    contextualized_prompt = render_template(stage_prompt, user_data)
+                    return f"To clarify where we were: {contextualized_prompt}", {
+                        "intent": "post_interruption_clarification",
+                        "update": {
+                            "conversation_stage": current_stage,
+                            "language_preference": session_data.get('language_preference', 'English')
+                        }
+                    }, True
+    
+    # STEP 1: Check for interruptions first with flexible thresholds
+    is_interruption, intent_name, confidence = interruption_handler.detect_interruption(
+        user_input, current_stage, confidence_threshold=0.4  # Lower threshold for compound responses
+    )
+    
+    # STEP 1.5: Special handling for compound responses (response + interruption)
+    # Check if user input contains common response words + interruption keywords
+    user_input_lower = user_input.lower() if user_input else ""
+    contains_response_words = any(word in user_input_lower for word in ["yes", "no", "ok", "okay", "sure"])
+    contains_question_words = any(word in user_input_lower for word in ["where", "how", "why", "what", "who", "when"])
+    
+    # If it's a compound response, prioritize interruption if confidence is reasonable
+    if contains_response_words and contains_question_words and confidence >= 0.3:
+        print(f"🔄 COMPOUND RESPONSE DETECTED: Response words + Question words")
+        print(f"🔔 Prioritizing interruption: {intent_name} (confidence: {confidence:.2f})")
+        is_interruption = True
+    
+    if is_interruption:
+        print(f"🔔 INTERRUPTION DETECTED: {intent_name} (confidence: {confidence:.2f})")
+        
+        # Handle the interruption
+        bot_response, metadata, should_resume = interruption_handler.handle_interruption(
+            intent_name, user_input, current_stage, session_data, user_data
+        )
+        
+        # Check if this is a critical interruption that changes flow completely
+        if interruption_handler.is_critical_interruption(intent_name):
+            print(f"🚨 Critical interruption: {intent_name}")
+            return bot_response, metadata, True
+        
+        # For non-critical interruptions that should return to main flow
+        if should_resume:
+            # Get the interruption intent data to check if it should return to main flow
+            intent_data = interruption_handler.interruptible_intents.get(intent_name, {})
+            if intent_data.get("return_to_main_flow", False):
+                # Stay in the same stage and add transition
+                print(f"🔄 Returning to main flow at stage: {current_stage}")
+                metadata.setdefault("update", {})["conversation_stage"] = current_stage
+                metadata["interruption_handled"] = True
+                metadata["returned_to_main_flow"] = True
+        
+        return bot_response, metadata, True
+    
+    # STEP 2: Normal flow - check if response matches expected patterns
+    matches_expected, matched_type, scripted_response, next_stage = check_if_response_matches_expected(
+        user_input, current_stage
+    )
+    
+    if matches_expected:
+        print(f"🎯 EXPECTED RESPONSE MATCH: Type='{matched_type}', Next='{next_stage}'")
+        
+        if scripted_response:
+            # Use the exact scripted response with user data filled in
+            from prompt_builder import render_template
+            bot_response = render_template(scripted_response, user_data)
+            current_branch_data = branches_manager.read_branch(current_stage)
+            metadata = {
+                "intent": current_branch_data.get("intent", "unknown") if current_branch_data else "unknown",
+                "update": {
+                    "conversation_stage": next_stage or current_stage,
+                    "language_preference": session_data.get("language_preference", "English")
+                }
+            }
+        else:
+            # No scripted response, use prompt builder for this stage
+            prompt = build_prompt(user_input, user_data, session_data)
+            bot_response = send_to_gemini(prompt, api_key)
+            clean_response = bot_response.strip().split("```json")[0].strip()
+            bot_response = clean_response
+            metadata = extract_metadata(bot_response)
+            
+            # Override next stage if provided in branch
+            if next_stage and "update" in metadata:
+                metadata["update"]["conversation_stage"] = next_stage
+        
+        return bot_response, metadata, True
+    
+    # STEP 3: Unexpected response - use Gemini analysis
+    print("🤖 Using Gemini for unexpected response")
+    bot_response, metadata, is_unexpected = analyze_user_response_and_suggest(
+        user_input, current_stage, user_data, session_data
+    )
+    return bot_response, metadata, True
+    bot_response, metadata, is_unexpected = analyze_user_response_and_suggest(
+        user_input, current_stage, user_data, session_data
+    )
+    return bot_response, metadata, True
+
 def main():
     """Main function to run the agent conversation"""
     
@@ -427,73 +606,12 @@ def main():
                 expected_types = list(current_branch.get("expected_user_responses", {}).keys())
                 print(f"🔍 DEBUG: Expected response types: {expected_types}")
             
-            # STEP 1: First check if response matches expected patterns in branches.json
-            matches_expected, matched_type, scripted_response, next_stage = check_if_response_matches_expected(user_input, current_stage)
+            # Process conversation turn with interruption handling
+            bot_response, metadata, conversation_continues = process_conversation_turn(
+                user_input, current_stage, user_data, session_data
+            )
             
-            print(f"🔍 DEBUG: User input '{user_input}' matches expected: {matches_expected}")
-            if matches_expected:
-                print(f"🔍 DEBUG: Matched type: {matched_type}, Next stage: {next_stage}")
-            
-            if matches_expected:
-                # STEP 2a: Use scripted response from branches.json
-                print(f"📝 Veena (following script - {matched_type}): ", end="")
-                
-                if scripted_response:
-                    # Use the exact scripted response with user data filled in
-                    bot_response = render_template(scripted_response, user_data)
-                    print(bot_response)
-                    
-                    # Update session data based on script
-                    current_branch_data = branches_manager.read_branch(current_stage)
-                    metadata = {
-                        "intent": current_branch_data.get("intent", "unknown") if current_branch_data else "unknown",
-                        "update": {
-                            "conversation_stage": next_stage or current_stage,
-                            "language_preference": session_data.get("language_preference", "English")
-                        }
-                    }
-                else:
-                    # No scripted response, use prompt builder for this stage
-                    prompt = build_prompt(user_input, user_data, session_data)
-                    bot_response = send_to_gemini(prompt, api_key)
-                    clean_response = bot_response.strip().split("```json")[0].strip()
-                    print(clean_response)
-                    metadata = extract_metadata(bot_response)
-                    
-                    # Override next stage if provided in branch
-                    if next_stage and "update" in metadata:
-                        metadata["update"]["conversation_stage"] = next_stage
-            
-            else:
-                # STEP 2b: Response doesn't match expected patterns - handle as unexpected
-                print(f"🤔 Veena (handling unexpected response): ", end="")
-                
-                # Special case: If it's a generic affirmative in a context where we should continue the flow
-                user_input_lower = user_input.lower()
-                generic_affirmatives = ["sure", "okay", "alright", "fine", "proceed", "continue", "go ahead"]
-                if any(word in user_input_lower for word in generic_affirmatives):
-                    # Try to use the default bot prompt for this stage as if user said "yes"
-                    current_branch = branches_manager.read_branch(current_stage)
-                    if current_branch and current_branch.get("bot_prompt"):
-                        print("🎯 Treating generic affirmative as 'continue conversation'")
-                        bot_response = render_template(current_branch["bot_prompt"], user_data)
-                        print(bot_response)
-                        
-                        metadata = {
-                            "intent": current_branch.get("intent", "continue_conversation"),
-                            "update": {
-                                "conversation_stage": current_stage,  # Stay in same stage for now
-                                "language_preference": session_data.get("language_preference", "English")
-                            }
-                        }
-                    else:
-                        # Fall back to normal unexpected response handling
-                        bot_response, metadata, is_unexpected = analyze_user_response_and_suggest(user_input, current_stage, user_data, session_data)
-                        print(bot_response)
-                else:
-                    # Normal unexpected response handling
-                    bot_response, metadata, is_unexpected = analyze_user_response_and_suggest(user_input, current_stage, user_data, session_data)
-                    print(bot_response)
+            print(bot_response)
         
         else:
             # Empty input, use normal flow

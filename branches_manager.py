@@ -785,6 +785,60 @@ class BranchesManager:
         
         print(f"\n🎉 Apply suggestions completed!")
 
+    def read_interruptible_intents(self) -> Dict[str, Any]:
+        """
+        Read interruptible intents from branches.json
+        
+        Returns:
+            Dict: Dictionary of interruptible intents
+        """
+        return self.branches.get("interruptible_intents", {})
+    
+    def is_interruptible_stage(self, stage_name: str, intent_name: str) -> bool:
+        """
+        Check if a stage can be interrupted by a specific intent
+        
+        Args:
+            stage_name (str): Current conversation stage
+            intent_name (str): Interruption intent name
+            
+        Returns:
+            bool: True if stage can be interrupted by this intent
+        """
+        interruptible_intents = self.read_interruptible_intents()
+        intent_data = interruptible_intents.get(intent_name, {})
+        interruptible_stages = intent_data.get("interruptible_stages", [])
+        
+        return interruptible_stages == ["*"] or stage_name in interruptible_stages
+    
+    def get_interruption_response(self, intent_name: str) -> str:
+        """
+        Get the response template for an interruption intent
+        
+        Args:
+            intent_name (str): Name of the interruption intent
+            
+        Returns:
+            str: Response template for the interruption
+        """
+        interruptible_intents = self.read_interruptible_intents()
+        intent_data = interruptible_intents.get(intent_name, {})
+        return intent_data.get("response", "I understand. Let me help you with that.")
+    
+    def get_interruption_action(self, intent_name: str) -> str:
+        """
+        Get the action to take for an interruption intent
+        
+        Args:
+            intent_name (str): Name of the interruption intent
+            
+        Returns:
+            str: Action to take for the interruption
+        """
+        interruptible_intents = self.read_interruptible_intents()
+        intent_data = interruptible_intents.get(intent_name, {})
+        return intent_data.get("action", "acknowledge_and_redirect")
+    
 # Example usage and testing
 if __name__ == "__main__":
     # Initialize the manager

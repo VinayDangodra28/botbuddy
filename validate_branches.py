@@ -11,10 +11,14 @@ def analyze_branches():
     with open('branches.json', 'r') as f:
         branches = json.load(f)
     
-    # Get all branch names
+    # Get all branch names (exclude metadata)
     branch_names = set(branches.keys())
-    print(f"Total branches defined: {len(branch_names)}")
-    print(f"Branches: {sorted(branch_names)}")
+    metadata_branches = {"_metadata", "interruptible_intents"}
+    actual_branches = branch_names - metadata_branches
+    
+    print(f"Total branches defined: {len(actual_branches)}")
+    print(f"Branches: {sorted(actual_branches)}")
+    print(f"Metadata sections: {sorted(metadata_branches)}")
     print("\n" + "="*50)
     
     # Find all "next" references
@@ -27,7 +31,7 @@ def analyze_branches():
                 current_path = f"{path}.{key}" if path else key
                 if key == "next" and isinstance(value, str):
                     next_references.add(value)
-                    if value not in branch_names:
+                    if value not in actual_branches and value not in metadata_branches:
                         broken_links.append((current_path, value))
                 else:
                     extract_next_refs(value, current_path)
@@ -54,7 +58,7 @@ def analyze_branches():
     
     while to_visit:
         branch_name = to_visit.pop()
-        if branch_name in reachable or branch_name not in branch_names:
+        if branch_name in reachable or branch_name not in actual_branches:
             continue
         
         reachable.add(branch_name)
@@ -70,7 +74,7 @@ def analyze_branches():
                 if isinstance(response_data, dict) and "next" in response_data:
                     to_visit.append(response_data["next"])
     
-    unreachable = branch_names - reachable
+    unreachable = actual_branches - reachable
     if unreachable:
         print(f"\n⚠️  UNREACHABLE BRANCHES ({len(unreachable)}):")
         for branch in sorted(unreachable):
@@ -81,7 +85,7 @@ def analyze_branches():
     # Summary
     print(f"\n" + "="*50)
     print("SUMMARY:")
-    print(f"  Total branches: {len(branch_names)}")
+    print(f"  Total branches: {len(actual_branches)}")
     print(f"  Broken links: {len(broken_links)}")
     print(f"  Unreachable branches: {len(unreachable)}")
     
