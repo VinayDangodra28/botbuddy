@@ -1,0 +1,866 @@
+{
+  "pending_operations": [
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-19T22:50:33.537479",
+      "data": {
+        "branch_name": "policy_confirmation_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_confirmation",
+          "bot_prompt": "After receiving an unexpected 'ok' response from the user in the policy_confirmation stage, ask clarifying questions to determine the next steps. If the user expresses readiness to pay, proceed to payment_followup. If they have concerns or questions, proceed to payment_inquiry.  If they are unsure or need more time,  proceed to schedule_callback or closure.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "yes",
+                "ready",
+                "proceed",
+                "pay",
+                "reactivate"
+              ],
+              "next": "payment_followup",
+              "response": "Excellent! Let's proceed with reactivating your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "negative": {
+              "keywords": [
+                "concerns",
+                "questions",
+                "worried",
+                "unsure",
+                "more time",
+                "not ready",
+                "think",
+                "call back"
+              ],
+              "next": "payment_inquiry",
+              "response": "I understand. Could you please elaborate on your concerns or questions?  Alternatively, we can schedule a callback at your convenience."
+            },
+            "neutral": {
+              "keywords": [
+                "ok",
+                "okay",
+                "fine",
+                "alright"
+              ],
+              "next": "policy_confirmation",
+              "response": "To help me best assist you, could you clarify whether you are ready to proceed with payment, have questions regarding your policy, or would prefer to schedule a callback?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_confirmation",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-19T23:36:48.533562",
+      "data": {
+        "branch_name": "ask_relationship_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_ask_relationship",
+          "bot_prompt": "When the user responds negatively to the relationship check (e.g., denies being the policyholder), politely inquire about the policyholder's availability or if the user can provide information to help connect with the right person. If the user is helpful, proceed to 'policy_handling_check' or 'schedule_callback'. If not, proceed to 'closure'.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "yes",
+                "available",
+                "will get",
+                "connect",
+                "speak to",
+                "transfer",
+                "moment",
+                "hold on"
+              ],
+              "next": "policy_handling_check",
+              "response": "Thank you. I appreciate your help.  When would be a good time to reach Pratik Jadhav?  Alternatively, if you can share his contact information, I can reach out directly."
+            },
+            "negative": {
+              "keywords": [
+                "no",
+                "don't know",
+                "not available",
+                "refuse",
+                "cannot help"
+              ],
+              "next": "schedule_callback",
+              "response": "I understand.  To ensure I speak with the correct individual, I'll need to schedule a callback with Pratik Jadhav.  Could you provide a suitable time for me to reach him?"
+            },
+            "neutral": {
+              "keywords": [
+                "maybe",
+                "later",
+                "uncertain"
+              ],
+              "next": "schedule_callback",
+              "response": "Thank you for your time. To ensure I reach the right person, it's best to schedule a callback. Please let me know a suitable time to reach Pratik Jadhav."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "ask_relationship",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "i am not pratik jadhav"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T14:30:15.526554",
+      "data": {
+        "branch_name": "policy_status_intro_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_status_intro",
+          "bot_prompt": "If the user states they don't remember their overdue premium, confirm the policy number and then retrieve and present the outstanding amount.  If they confirm the details and seem ready to pay, proceed to 'payment_followup'. If they have further questions or concerns, proceed to 'payment_inquiry'. If they are still uncertain, proceed to 'schedule_callback'.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "yes",
+                "correct",
+                "right",
+                "that's right",
+                "okay"
+              ],
+              "next": "payment_followup",
+              "response": "Okay, Rajesh Kumar, your outstanding premium is ₹15,000. Are you ready to proceed with payment?"
+            },
+            "negative": {
+              "keywords": [
+                "no",
+                "wrong",
+                "incorrect",
+                "not sure",
+                "questions",
+                "concerns"
+              ],
+              "next": "payment_inquiry",
+              "response": "I understand. Let me clarify. Your policy number is VE87654321 and the due date was March 15th, 2025.  Do you have any questions about the outstanding amount of ₹15,000?"
+            },
+            "neutral": {
+              "keywords": [
+                "think",
+                "need time",
+                "call back",
+                "later"
+              ],
+              "next": "schedule_callback",
+              "response": "Okay, Rajesh Kumar.  To help you better, let's schedule a call back at your convenience. What time works best for you?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "closure",
+              "response": "I understand you're having trouble remembering the details. To avoid any further issues with your policy, I suggest you call us back at your earliest convenience."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_status_intro",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "i dont remember my overdue premium"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T14:30:27.900085",
+      "data": {
+        "branch_name": "policy_status_intro_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_status_intro_handled",
+          "bot_prompt": "After confirming the policy details and receiving an unexpected 'ok', ask clarifying questions to determine the next steps. If the user expresses readiness to pay, proceed to payment_followup. If they have concerns or questions, proceed to payment_inquiry. If they are unsure or need more time, proceed to schedule_callback. If they want to end the conversation, proceed to closure.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_followup",
+              "response": "Excellent! Let's proceed with reactivating your policy. How would you like to make the payment? (Cash, cheque, or online transfer?)"
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand.  Do you have any questions about the outstanding amount or the reactivation process?"
+            },
+            "neutral": {
+              "next": "schedule_callback",
+              "response": "Okay.  To ensure we address your concerns properly, would you prefer to schedule a callback at a more convenient time?"
+            },
+            "unclear": {
+              "next": "closure",
+              "response": "Okay, Rajesh Kumar.  If you have any questions or wish to proceed later, please feel free to call us back."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_status_intro_handled",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T14:30:55.029251",
+      "data": {
+        "branch_name": "policy_status_intro_handled_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_status_intro_handled_handled",
+          "bot_prompt": "After confirming policy details (outstanding premium of ₹15,000) and receiving an unexpected 'no', ask clarifying questions to determine next steps. If the user expresses readiness to pay, proceed to payment_followup. If they have concerns or questions, proceed to payment_inquiry. If they are unsure or need more time, proceed to schedule_callback. If they want to end the conversation, proceed to closure.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_followup",
+              "response": "Excellent! Let's proceed with reactivating your policy. How would you like to make the payment? (Cash, cheque, or online transfer?)"
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand. Do you have any questions about the outstanding amount or the reactivation process?  Perhaps we can address your concerns."
+            },
+            "neutral": {
+              "next": "schedule_callback",
+              "response": "Okay. To ensure we address your concerns properly, would you prefer to schedule a callback at a more convenient time?"
+            },
+            "unclear": {
+              "next": "closure",
+              "response": "Okay, Rajesh Kumar. If you have any questions or wish to proceed later, please feel free to call us back.  Have a great day!"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_status_intro_handled",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "no"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T14:43:18.916852",
+      "data": {
+        "branch_name": "policy_confirmation_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_confirmation",
+          "bot_prompt": "When a user responds with an ambiguous affirmation (like 'sure', 'okay', 'ok') at the policy_confirmation stage, ask clarifying questions to determine their readiness to proceed with payment or if they have any concerns.  If they express readiness to pay, proceed to payment_followup. If they have concerns or questions, proceed to payment_inquiry. If they are unsure or need more time, proceed to schedule_callback.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "yes",
+                "ready",
+                "proceed",
+                "pay",
+                "reactivate",
+                "yes, proceed"
+              ],
+              "next": "payment_followup",
+              "response": "Excellent! Let's proceed with reactivating your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+            },
+            "negative": {
+              "keywords": [
+                "concerns",
+                "questions",
+                "worried",
+                "unsure",
+                "more time",
+                "not ready",
+                "think",
+                "call back",
+                "no",
+                "not yet"
+              ],
+              "next": "payment_inquiry",
+              "response": "I understand. Could you please elaborate on your concerns or questions? Alternatively, we can schedule a callback at your convenience."
+            },
+            "neutral": {
+              "keywords": [
+                "ok",
+                "okay",
+                "fine",
+                "alright",
+                "maybe"
+              ],
+              "next": "schedule_callback",
+              "response": "To ensure we address your concerns properly, would you prefer to schedule a callback at your convenience?"
+            },
+            "unclear": {
+              "keywords": [],
+              "next": "closure",
+              "response": "I understand you need some time to think about this. If you have any questions or wish to proceed later, please feel free to call us back. Have a great day!"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_confirmation",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "sure",
+              "ok",
+              "okay",
+              "alright",
+              "fine"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T14:43:39.982943",
+      "data": {
+        "branch_name": "policy_confirmation_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_confirmation_handled",
+          "bot_prompt": "When a user responds with 'I will renew' or similar ambiguous statements confirming intent to renew but not specifying payment readiness at the policy_confirmation_handled stage, clarify their intention regarding payment.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_followup",
+              "response": "Excellent! Let's proceed with the renewal. How would you prefer to make the payment: cash, check, or online transfer?"
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand.  Could you please clarify what's preventing you from making the payment now?  Are there any questions or concerns I can address?"
+            },
+            "neutral": {
+              "next": "schedule_callback",
+              "response": "Okay, Priya. To ensure we can assist you effectively, would you prefer to schedule a callback at your convenience to discuss the renewal payment?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_confirmation",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "i will renew"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T15:09:00.855760",
+      "data": {
+        "branch_name": "intro_and_consent_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_intro_and_consent",
+          "bot_prompt": "If the user suggests a different time to speak, offer a few time slots or ask for their preferred time. If they confirm a time, set a callback using `next_call_scheduled` and proceed to `schedule_callback`. If they decline or are unsure, proceed to `closure`.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "schedule_callback",
+              "response": "Great! Let's schedule a call then.  Would {time_slot_1} or {time_slot_2} work for you?  Alternatively, please let me know what time suits you best."
+            },
+            "negative": {
+              "next": "closure",
+              "response": "I understand.  If you change your mind, please don't hesitate to call us back. Thank you for your time."
+            },
+            "unclear": {
+              "next": "closure",
+              "response": "To ensure I can assist you effectively, could you please clarify whether you would like to reschedule or not?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "intro_and_consent",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "can we speak tomorrow",
+              "tomorrow",
+              "speak later",
+              "another time"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T15:09:37.950349",
+      "data": {
+        "branch_name": "intro_and_consent_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_intro_and_consent_handled",
+          "bot_prompt": "If the user responds with an ambiguous confirmation (e.g., 'yes i confirm', 'ok', 'yes'), ask for clarification regarding their confirmation. If they confirm the scheduled time, proceed to 'schedule_callback'. If they indicate a different intention or have questions, proceed to 'policy_confirmation' to re-iterate policy details and payment options.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "schedule_callback",
+              "response": "Perfect! I'll call you tomorrow at 12:30 PM to discuss your ValuEnable Shield Plan. Is there anything else I can help you with today?"
+            },
+            "negative": {
+              "next": "policy_confirmation",
+              "response": "I understand.  To ensure I'm addressing your needs correctly, let's review your policy details. Your outstanding premium for the ValuEnable Shield Plan is ₹10,000. Are you ready to discuss payment options or do you have any questions?"
+            },
+            "neutral": {
+              "next": "policy_confirmation",
+              "response": "To clarify, are you confirming the appointment tomorrow at 12:30 PM or do you have other questions regarding your policy?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "intro_and_consent_handled",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "yes i confirm",
+              "ok",
+              "yes",
+              "confirmed"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:24:05.518238",
+      "data": {
+        "branch_name": "handle_policy_status_intro_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_policy_status_intro",
+          "bot_prompt": "If the user gives an ambiguous affirmative response (e.g., 'absolutely', 'sure', 'okay', without explicitly confirming or denying the policy details or readiness to pay), clarify their understanding and intention. Ask if they're ready to proceed with payment or if they have questions about the policy's inactive status and overdue premium.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "yes",
+                "ready",
+                "proceed",
+                "pay",
+                "reactivate",
+                "ok",
+                "okay",
+                "sure",
+                "absolutely"
+              ],
+              "next": "payment_followup",
+              "response": "Excellent! Let's proceed with reactivating your policy. How would you like to make the payment? (Cash, cheque, or online transfer?)"
+            },
+            "negative": {
+              "keywords": [
+                "no",
+                "not ready",
+                "questions",
+                "concerns",
+                "unsure",
+                "more time",
+                "need clarification",
+                "explain"
+              ],
+              "next": "payment_inquiry",
+              "response": "I understand. Could you please clarify what's preventing you from proceeding at this time? Do you have any questions about the outstanding premium or the reactivation process?"
+            },
+            "neutral": {
+              "keywords": [
+                "think",
+                "call back",
+                "later"
+              ],
+              "next": "schedule_callback",
+              "response": "Okay, Pratik. To ensure we address your concerns properly, would you prefer to schedule a callback at your convenience?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "policy_status_intro",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "absolutely",
+              "sure",
+              "okay",
+              "ok"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:24:41.734490",
+      "data": {
+        "branch_name": "handle_payment_inquiry_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_inquiry",
+          "bot_prompt": "When the user provides an unexpected or vague response during the `payment_inquiry` stage (e.g., 'I don't have', 'Nothing', etc.), ask clarifying questions to determine the underlying reason for non-payment.  Attempt to elicit information regarding financial difficulties, administrative issues, or other obstacles.",
+          "expected_user_responses": {
+            "financial_difficulty": {
+              "keywords": [
+                "financial",
+                "money",
+                "problem",
+                "issue",
+                "difficult",
+                "difficulties",
+                "broke",
+                "can't afford",
+                "unemployed",
+                "job loss"
+              ],
+              "next": "explain_policy_loss",
+              "response": "I understand that financial difficulties can arise unexpectedly.  Let me explain the benefits of resuming your policy and explore some possible payment options to help you."
+            },
+            "administrative_issue": {
+              "keywords": [
+                "lost",
+                "misplaced",
+                "didn't receive",
+                "wrong information",
+                "problem with",
+                "issue with",
+                "documentation",
+                "paperwork"
+              ],
+              "next": "administrative_issue_handling",
+              "response": "I'm sorry to hear you're experiencing an administrative issue.  Could you please tell me more about the problem so I can assist you in resolving it?"
+            },
+            "other_reason": {
+              "keywords": [
+                "*"
+              ],
+              "next": "explain_policy_loss",
+              "response": "Thank you for clarifying. To best assist you, please explain the reason for not paying your premium. Understanding this will help me guide you to the most suitable solution."
+            },
+            "unclear_response": {
+              "keywords": [
+                "nothing",
+                "don't know",
+                "I don't understand",
+                "I don't have anything to say"
+              ],
+              "next": "explain_policy_loss",
+              "response": "I understand that you may be hesitant to share specifics, however, to be able to help you best, I need some further details. Please elaborate on why the premium payment has not been made. "
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_inquiry",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "I don't have",
+              "Nothing",
+              "I don't know"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:28:25.517520",
+      "data": {
+        "branch_name": "payment_followup_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_followup",
+          "bot_prompt": "If the user provides an unexpected response (e.g., names a specific payment app like 'GPay?', 'PhonePe?', etc.) during the payment_followup stage, confirm acceptance of the mentioned method and proceed with sending the payment link. If the user confirms payment, proceed to 'payment_details'. If they decline or are unclear, proceed to 'payment_inquiry' to clarify.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_details",
+              "response": "Great! I've sent the payment link via {payment_method}. Please let me know once you've completed the payment."
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand.  Could you please clarify how you would prefer to make the payment? We accept various methods including online transfers (Google Pay, PhonePe, etc.), cheque, and cash."
+            },
+            "unclear": {
+              "next": "payment_inquiry",
+              "response": "To ensure a smooth process, could you please specify your preferred payment method? This will help me guide you through the process effectively."
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_followup",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "gpay?",
+              "phonepe?",
+              "paytm?",
+              "other payment app?"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:28:43.555027",
+      "data": {
+        "branch_name": "payment_followup_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_followup_handled",
+          "bot_prompt": "If the user gives an ambiguous affirmative response (e.g., 'yes', 'yess', 'sure', 'okay') after discussing payment methods, clarify their intention. Ask if they are ready to proceed with the payment using their preferred method (already discussed).",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_details",
+              "response": "Excellent!  Let's proceed with the payment via Google Pay. I'll send you the link again. Please confirm once you receive it."
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand.  Could you please clarify? Are you having second thoughts about the payment or do you need more time to complete the payment?"
+            },
+            "unclear": {
+              "next": "payment_inquiry",
+              "response": "To ensure a smooth process, could you please confirm whether you're ready to proceed with the Google Pay payment now?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_followup",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "yes",
+              "yess",
+              "sure",
+              "okay",
+              "ok"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:28:59.288915",
+      "data": {
+        "branch_name": "payment_followup_handled_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_followup_handled_handled_handled",
+          "bot_prompt": "After confirming the user's preferred payment method (Google Pay) and receiving an unexpected 'yes', clarify if they are ready to proceed with the payment. If yes, send the payment link and proceed to 'payment_details'. If no or unclear, proceed to 'payment_inquiry' for clarification.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_details",
+              "response": "Excellent! I'll send you the payment link via Google Pay now. Please let me know once you've completed the payment."
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand. Could you please clarify? Are you having second thoughts about the payment or do you need more time to complete the payment?  We can discuss alternative payment methods or reschedule if needed."
+            },
+            "unclear": {
+              "next": "payment_inquiry",
+              "response": "To ensure a smooth process, could you please confirm whether you're ready to proceed with the Google Pay payment now?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_followup_handled_handled",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "yes"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:29:31.619956",
+      "data": {
+        "branch_name": "payment_followup_handled_handled_handled_handled",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_followup_handled_handled_handled",
+          "bot_prompt": "After confirming the user's preferred payment method (Google Pay) and receiving an unexpected 'yes', clarify if they are ready to proceed with the payment.  If yes, send the payment link and proceed to 'payment_details'. If no or unclear, proceed to 'payment_inquiry' for clarification.",
+          "expected_user_responses": {
+            "positive": {
+              "next": "payment_details",
+              "response": "Excellent! I'll send you the payment link via Google Pay now. Please let me know once you've completed the payment."
+            },
+            "negative": {
+              "next": "payment_inquiry",
+              "response": "I understand. Could you please clarify? Are you having second thoughts about the payment or do you need more time to complete the payment? We can discuss alternative payment methods or reschedule if needed."
+            },
+            "unclear": {
+              "next": "payment_inquiry",
+              "response": "To ensure a smooth process, could you please confirm whether you're ready to proceed with the Google Pay payment now?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_followup_handled_handled",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": "yes"
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:47:53.708972",
+      "data": {
+        "branch_name": "handle_payment_success_closure_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_success_closure",
+          "bot_prompt": "When the user responds with a short, positive, and non-specific phrase like 'ok', 'okay', 'ok thank you', 'thanks', etc. at the end of a successful payment, confirm the successful payment and ask if there's anything else the user needs help with before closing the conversation. If the user has further questions, proceed to 'payment_success_inquiry'. If the user confirms they don't have any questions, proceed to 'closure'.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "no",
+                "nothing",
+                "that's all",
+                "none",
+                "all good",
+                "no questions"
+              ],
+              "next": "closure",
+              "response": "Great! I'm glad we could help.  Thank you for choosing ValuEnable Life Insurance. Have a wonderful day!"
+            },
+            "negative": {
+              "keywords": [
+                "yes",
+                "something",
+                "question",
+                "help",
+                "another thing"
+              ],
+              "next": "payment_success_inquiry",
+              "response": "Certainly! What else can I help you with regarding your policy, Pratik?"
+            },
+            "unclear": {
+              "keywords": [
+                "*"
+              ],
+              "next": "payment_success_inquiry",
+              "response": "To best assist you, could you please clarify if you have any further questions or if I can close this call now?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_success_closure",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "ok",
+              "okay",
+              "ok thank you",
+              "thanks",
+              "thank you"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:48:14.758597",
+      "data": {
+        "branch_name": "handle_payment_success_closure_confirmation_unexpected_response",
+        "branch_data": {
+          "intent": "handle_unexpected_from_payment_success_closure_confirmation",
+          "bot_prompt": "At the `payment_success_closure_confirmation` stage, if the user responds with a simple expression of gratitude (e.g., 'thank you', 'thank you so much', 'thanks'), re-iterate the successful payment and offer further assistance before closing the call. If the user indicates they need no further assistance, proceed to closure. If they have further questions or needs, proceed to `payment_success_inquiry`.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "no",
+                "nothing",
+                "that's all",
+                "all good",
+                "no questions",
+                "none",
+                "no thanks"
+              ],
+              "next": "closure",
+              "response": "Great! I'm glad we could help. Thank you for choosing ValuEnable Life Insurance. Have a wonderful day!"
+            },
+            "negative": {
+              "keywords": [
+                "yes",
+                "something",
+                "question",
+                "help",
+                "another thing",
+                "yes please",
+                "more questions"
+              ],
+              "next": "payment_success_inquiry",
+              "response": "Certainly! What else can I help you with regarding your policy, Pratik?"
+            },
+            "unclear": {
+              "keywords": [
+                "*"
+              ],
+              "next": "payment_success_inquiry",
+              "response": "To best assist you, could you please clarify if you have any further questions or if I can close this call now?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_success_closure",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "thank you",
+              "thank you so much",
+              "thanks"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation_type": "create",
+      "timestamp": "2025-07-20T17:48:39.978866",
+      "data": {
+        "branch_name": "handle_payment_success_closure_confirmation_simple_positive",
+        "branch_data": {
+          "intent": "handle_simple_positive_from_payment_success_closure_confirmation",
+          "bot_prompt": "When the user responds with a simple positive phrase (e.g., 'ok', 'okay', 'ok thank you', 'thanks') at the payment_success_closure_confirmation stage, re-iterate the successful payment and offer further assistance before closing. If the user needs no further assistance, proceed to closure. If they have further questions or needs, proceed to payment_success_inquiry.",
+          "expected_user_responses": {
+            "positive": {
+              "keywords": [
+                "no",
+                "nothing",
+                "that's all",
+                "all good",
+                "no questions",
+                "none",
+                "no thanks"
+              ],
+              "next": "closure",
+              "response": "Great! I'm glad we could help. Thank you for choosing ValuEnable Life Insurance. Have a wonderful day!"
+            },
+            "negative": {
+              "keywords": [
+                "yes",
+                "something",
+                "question",
+                "help",
+                "another thing",
+                "yes please",
+                "more questions"
+              ],
+              "next": "payment_success_inquiry",
+              "response": "Certainly! What else can I help you with regarding your policy, Pratik?"
+            },
+            "unclear": {
+              "keywords": [
+                "*"
+              ],
+              "next": "payment_success_inquiry",
+              "response": "To best assist you, could you please clarify if you have any further questions or if I can close this call now?"
+            }
+          }
+        },
+        "called_when": [
+          {
+            "previous_intent": "payment_success_closure_confirmation",
+            "previous_response": "unexpected_response",
+            "response_of_previous_response": [
+              "ok",
+              "okay",
+              "ok thank you",
+              "thanks",
+              "thank you",
+              "ok thanks"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "timestamp": "2025-07-20T17:48:39.978866"
+}

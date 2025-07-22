@@ -1,0 +1,353 @@
+{
+    "metadata": {
+        "version": "1.0.0",
+        "created": "2025-07-21T23:50:44.581978",
+        "last_updated": "2025-07-21T23:53:45.006919",
+        "total_customers": 3,
+        "total_conversations": 0,
+        "total_successful_conversations": 0,
+        "system_settings": {
+            "auto_save": true,
+            "debug_mode": false,
+            "default_language": "English",
+            "session_timeout_minutes": 30
+        }
+    },
+    "customers": {
+        "customer_001": {
+            "profile": {
+                "id": "customer_001",
+                "policy_holder_name": "Pratik Jadhav",
+                "policy_number": "VE12345678",
+                "product_name": "ValuEnable Shield Plan",
+                "grace_period": "30 days",
+                "policy_status": "Discontinuance",
+                "policy_bond": "Not available",
+                "policy_start_date": "2022-06-12",
+                "total_premium_paid": "₹50,000",
+                "premium_due_date": "2025-06-12",
+                "outstanding_amount": "₹10,000",
+                "sum_assured": "₹5,00,000",
+                "fund_value": "₹65,000",
+                "phone": "+91-9876543210",
+                "email": "pratik.jadhav@email.com",
+                "address": "Mumbai, Maharashtra",
+                "created_date": "2022-06-12",
+                "last_updated": "2025-07-21T23:50:44.581978"
+            },
+            "status": {
+                "conversation_status": "completed",
+                "priority": "high",
+                "call_attempts": 1,
+                "last_call_attempt": "2025-07-21T23:51:28.263512",
+                "next_call_scheduled": null,
+                "tags": [
+                    "high_value",
+                    "lapsed_policy"
+                ],
+                "notes": "Policy in discontinuance state, requires immediate attention",
+                "last_successful_contact": "2025-07-21T23:53:45.006919"
+            },
+            "conversations": [
+                {
+                    "conversation_id": "0c5465cc-50eb-4906-b842-fd199343f542",
+                    "start_time": "2025-07-21T23:51:28.261501",
+                    "end_time": "2025-07-21T23:53:45.000305",
+                    "duration_seconds": 136.738804,
+                    "status": "completed",
+                    "outcome": "successful",
+                    "session_data": {
+                        "conversation_stage": "payment_success_closure",
+                        "language_preference": "English",
+                        "user_agreed_to_pay": null,
+                        "callback_scheduled": false,
+                        "chat_history": [
+                            {
+                                "user": null,
+                                "veena": "Hello and very Good Morning Sir, May I speak with Pratik Jadhav?"
+                            },
+                            {
+                                "user": "yes, speaking",
+                                "veena": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?"
+                            },
+                            {
+                                "user": "yes",
+                                "veena": "Perfect! I'm calling because your policy number VE12345678 has an overdue premium of ₹₹10,000 that was due on 2025-06-12. Your policy is currently inactive, but I can help you reactivate it. Are these details correct?"
+                            },
+                            {
+                                "user": "yes",
+                                "veena": "Great! Let me provide the complete details of your policy.  Your ValuEnable Life ValuEnable Shield Plan policy started on 2022-06-12. You've invested ₹50,000 so far. Your current fund value is ₹₹65,000. The policy provides life cover of ₹₹5,00,000, but this cover is currently inactive due to the unpaid premium. Would you like to continue with reactivating your policy?"
+                            },
+                            {
+                                "user": "yes",
+                                "veena": "Excellent! Let's proceed with reactivating your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?"
+                            },
+                            {
+                                "user": "online",
+                                "veena": "Great! For online payment, you can use Debit/Credit card, Net Banking, PhonePe, Whatsapp or Google Pay. Which method would you prefer?"
+                            },
+                            {
+                                "user": "google pay",
+                                "veena": "Excellent! Google Pay is fast and secure. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?"
+                            },
+                            {
+                                "user": "yes",
+                                "veena": "Wonderful! I'm sending the payment link now. Please complete the payment and we'll update your policy status immediately."
+                            },
+                            {
+                                "user": null,
+                                "veena": "Thank you for choosing ValuEnable! Your payment link has been sent to your registered mobile number. Once payment is complete, your policy will be reactivated immediately and you'll receive a confirmation message. Have a wonderful day!"
+                            }
+                        ],
+                        "last_intent": "payment_confirmation"
+                    },
+                    "chat_history": [
+                        {
+                            "timestamp": "2025-07-21T23:51:28.302527",
+                            "user": null,
+                            "bot": "Hello and very Good Morning Sir, May I speak with Pratik Jadhav?",
+                            "metadata": {
+                                "stage": "greeting"
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:51:36.684372",
+                            "user": "yes, speaking",
+                            "bot": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?",
+                            "metadata": {
+                                "intent": "initial_greeting",
+                                "update": {
+                                    "conversation_stage": "intro_and_consent",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:52:30.514046",
+                            "user": "yes",
+                            "bot": "Perfect! I'm calling because your policy number VE12345678 has an overdue premium of ₹₹10,000 that was due on 2025-06-12. Your policy is currently inactive, but I can help you reactivate it. Are these details correct?",
+                            "metadata": {
+                                "intent": "introduction_consent",
+                                "update": {
+                                    "conversation_stage": "policy_status_intro",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:52:34.580774",
+                            "user": "yes",
+                            "bot": "Great! Let me provide the complete details of your policy.  Your ValuEnable Life ValuEnable Shield Plan policy started on 2022-06-12. You've invested ₹50,000 so far. Your current fund value is ₹₹65,000. The policy provides life cover of ₹₹5,00,000, but this cover is currently inactive due to the unpaid premium. Would you like to continue with reactivating your policy?",
+                            "metadata": {
+                                "intent": "policy_status_introduction",
+                                "update": {
+                                    "conversation_stage": "policy_confirmation",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:53:34.180169",
+                            "user": "yes",
+                            "bot": "Excellent! Let's proceed with reactivating your policy. May I know how you plan to make the payment? Will it be via cash, cheque, or online?",
+                            "metadata": {
+                                "intent": "confirm_policy",
+                                "update": {
+                                    "conversation_stage": "payment_followup",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:53:36.922192",
+                            "user": "online",
+                            "bot": "Great! For online payment, you can use Debit/Credit card, Net Banking, PhonePe, Whatsapp or Google Pay. Which method would you prefer?",
+                            "metadata": {
+                                "intent": "payment_mode_check",
+                                "update": {
+                                    "conversation_stage": "payment_mode_selection",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:53:39.455018",
+                            "user": "google pay",
+                            "bot": "Excellent! Google Pay is fast and secure. I'll send you the payment link on your registered mobile number. Will you be able to complete the payment today?",
+                            "metadata": {
+                                "intent": "payment_method_selection",
+                                "update": {
+                                    "conversation_stage": "payment_details",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:53:44.986147",
+                            "user": "yes",
+                            "bot": "Wonderful! I'm sending the payment link now. Please complete the payment and we'll update your policy status immediately.",
+                            "metadata": {
+                                "intent": "payment_confirmation",
+                                "update": {
+                                    "conversation_stage": "payment_success_closure",
+                                    "language_preference": "English"
+                                }
+                            }
+                        },
+                        {
+                            "timestamp": "2025-07-21T23:53:44.996196",
+                            "user": null,
+                            "bot": "Thank you for choosing ValuEnable! Your payment link has been sent to your registered mobile number. Once payment is complete, your policy will be reactivated immediately and you'll receive a confirmation message. Have a wonderful day!",
+                            "metadata": {
+                                "stage": "payment_success_closure",
+                                "final_closure_message": true
+                            }
+                        }
+                    ],
+                    "metadata": {
+                        "interruptions": 0,
+                        "branch_changes": [],
+                        "ai_suggestions": [],
+                        "quality_score": null
+                    }
+                }
+            ],
+            "analytics": {
+                "total_conversations": 1,
+                "successful_conversations": 1,
+                "failed_conversations": 0,
+                "callback_requests": 0,
+                "payment_promises": 0,
+                "average_conversation_duration": 0,
+                "last_successful_contact": null,
+                "conversion_rate": 0.0
+            }
+        },
+        "customer_002": {
+            "profile": {
+                "id": "customer_002",
+                "policy_holder_name": "Rajesh Kumar",
+                "policy_number": "VE87654321",
+                "product_name": "SecureLife Plus",
+                "grace_period": "45 days",
+                "policy_status": "Lapsed",
+                "policy_bond": "Available",
+                "policy_start_date": "2021-03-15",
+                "total_premium_paid": "₹75,000",
+                "premium_due_date": "2025-03-15",
+                "outstanding_amount": "₹15,000",
+                "sum_assured": "₹8,00,000",
+                "fund_value": "₹90,000",
+                "phone": "+91-9876543211",
+                "email": "rajesh.kumar@email.com",
+                "address": "Delhi, India",
+                "created_date": "2021-03-15",
+                "last_updated": "2025-07-21T23:50:44.581978"
+            },
+            "status": {
+                "conversation_status": "pending",
+                "priority": "medium",
+                "call_attempts": 0,
+                "last_call_attempt": null,
+                "next_call_scheduled": null,
+                "tags": [
+                    "medium_value",
+                    "lapsed_policy"
+                ],
+                "notes": "Policy lapsed, potential for revival"
+            },
+            "conversations": [],
+            "analytics": {
+                "total_conversations": 0,
+                "successful_conversations": 0,
+                "failed_conversations": 0,
+                "callback_requests": 0,
+                "payment_promises": 0,
+                "average_conversation_duration": 0,
+                "last_successful_contact": null,
+                "conversion_rate": 0.0
+            }
+        },
+        "customer_003": {
+            "profile": {
+                "id": "customer_003",
+                "policy_holder_name": "Priya Sharma",
+                "policy_number": "VE11223344",
+                "product_name": "WealthGrow Plan",
+                "grace_period": "60 days",
+                "policy_status": "Revival Pending",
+                "policy_bond": "Not available",
+                "policy_start_date": "2020-08-20",
+                "total_premium_paid": "₹1,20,000",
+                "premium_due_date": "2025-08-20",
+                "outstanding_amount": "₹25,000",
+                "sum_assured": "₹12,00,000",
+                "fund_value": "₹1,40,000",
+                "phone": "+91-9876543212",
+                "email": "priya.sharma@email.com",
+                "address": "Bangalore, Karnataka",
+                "created_date": "2020-08-20",
+                "last_updated": "2025-07-21T23:50:44.581978"
+            },
+            "status": {
+                "conversation_status": "pending",
+                "priority": "low",
+                "call_attempts": 0,
+                "last_call_attempt": null,
+                "next_call_scheduled": null,
+                "tags": [
+                    "high_value",
+                    "revival_pending"
+                ],
+                "notes": "High value customer, revival in progress"
+            },
+            "conversations": [],
+            "analytics": {
+                "total_conversations": 0,
+                "successful_conversations": 0,
+                "failed_conversations": 0,
+                "callback_requests": 0,
+                "payment_promises": 0,
+                "average_conversation_duration": 0,
+                "last_successful_contact": null,
+                "conversion_rate": 0.0
+            }
+        }
+    },
+    "system_analytics": {
+        "daily_stats": {},
+        "monthly_stats": {},
+        "agent_performance": {
+            "total_calls_made": 0,
+            "successful_calls": 0,
+            "failed_calls": 0,
+            "callback_requests": 0,
+            "payment_commitments": 0,
+            "average_call_duration": 0,
+            "success_rate": 0.0
+        },
+        "conversation_flows": {
+            "most_common_paths": [],
+            "interruption_points": [],
+            "success_patterns": []
+        }
+    },
+    "templates": {
+        "conversation_templates": {},
+        "response_templates": {},
+        "email_templates": {}
+    },
+    "settings": {
+        "business_rules": {
+            "max_call_attempts": 3,
+            "callback_wait_hours": 24,
+            "priority_escalation_days": 7,
+            "auto_reschedule": true
+        },
+        "ai_settings": {
+            "temperature": 0.7,
+            "max_tokens": 1000,
+            "model_version": "gemini-pro"
+        }
+    }
+}

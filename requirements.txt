@@ -1,0 +1,23 @@
+# Core dependencies
+python-dotenv==1.0.0
+google-generativeai
+requests
+
+# Speech recognition and audio
+SpeechRecognition
+pyaudio
+pydub
+
+# Audio processing and TTS
+soundfile
+numpy
+
+# Web and async support
+aiohttp
+websockets
+
+# Data handling
+jsonschema
+
+# Optional: for better audio quality
+portaudio19  # May need manual installation on some systems

@@ -1,0 +1,18 @@
+{
+    "conversation_stage": "intro_and_consent",
+    "language_preference": "English",
+    "user_agreed_to_pay": null,
+    "callback_scheduled": false,
+    "chat_history": [
+        {
+            "user": null,
+            "veena": "Hello and very Good Morning Sir, May I speak with Pratik Jadhav?"
+        },
+        {
+            "user": "yes yes",
+            "veena": "My name is Veena and I am an Executive calling on behalf of ValuEnable Life Insurance Co. Ltd. This is a service call with regards to your life insurance policy. Is this the right time to speak to you regarding the renewal of your policy?"
+        }
+    ],
+    "last_intent": "initial_greeting",
+    "user_reason_for_non_payment": null
+}

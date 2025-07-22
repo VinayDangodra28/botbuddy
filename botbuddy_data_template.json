@@ -1,0 +1,189 @@
+{
+    "metadata": {
+        "version": "1.0.0",
+        "created": "2025-07-20T00:00:00.000000",
+        "last_updated": "2025-07-20T00:00:00.000000",
+        "total_customers": 3,
+        "total_conversations": 0,
+        "total_successful_conversations": 0,
+        "system_settings": {
+            "auto_save": true,
+            "debug_mode": false,
+            "default_language": "English",
+            "session_timeout_minutes": 30
+        }
+    },
+    "customers": {
+        "customer_001": {
+            "profile": {
+                "id": "customer_001",
+                "policy_holder_name": "Pratik Jadhav",
+                "policy_number": "VE12345678",
+                "product_name": "ValuEnable Shield Plan",
+                "grace_period": "30 days",
+                "policy_status": "Discontinuance",
+                "policy_bond": "Not available",
+                "policy_start_date": "2022-06-12",
+                "total_premium_paid": "₹50,000",
+                "premium_due_date": "2025-06-12",
+                "outstanding_amount": "₹10,000",
+                "sum_assured": "₹5,00,000",
+                "fund_value": "₹65,000",
+                "phone": "+91-9876543210",
+                "email": "pratik.jadhav@email.com",
+                "address": "Mumbai, Maharashtra",
+                "created_date": "2022-06-12",
+                "last_updated": "2025-07-20T00:00:00.000000"
+            },
+            "status": {
+                "conversation_status": "pending",
+                "priority": "high",
+                "call_attempts": 0,
+                "last_call_attempt": null,
+                "next_call_scheduled": null,
+                "tags": [
+                    "high_value",
+                    "lapsed_policy"
+                ],
+                "notes": "Policy in discontinuance state, requires immediate attention"
+            },
+            "conversations": [],
+            "analytics": {
+                "total_conversations": 0,
+                "successful_conversations": 0,
+                "failed_conversations": 0,
+                "callback_requests": 0,
+                "payment_promises": 0,
+                "average_conversation_duration": 0,
+                "last_successful_contact": null,
+                "conversion_rate": 0.0
+            }
+        },
+        "customer_002": {
+            "profile": {
+                "id": "customer_002",
+                "policy_holder_name": "Rajesh Kumar",
+                "policy_number": "VE87654321",
+                "product_name": "SecureLife Plus",
+                "grace_period": "45 days",
+                "policy_status": "Lapsed",
+                "policy_bond": "Available",
+                "policy_start_date": "2021-03-15",
+                "total_premium_paid": "₹75,000",
+                "premium_due_date": "2025-03-15",
+                "outstanding_amount": "₹15,000",
+                "sum_assured": "₹8,00,000",
+                "fund_value": "₹90,000",
+                "phone": "+91-9876543211",
+                "email": "rajesh.kumar@email.com",
+                "address": "Delhi, India",
+                "created_date": "2021-03-15",
+                "last_updated": "2025-07-20T00:00:00.000000"
+            },
+            "status": {
+                "conversation_status": "pending",
+                "priority": "medium",
+                "call_attempts": 0,
+                "last_call_attempt": null,
+                "next_call_scheduled": null,
+                "tags": [
+                    "medium_value",
+                    "lapsed_policy"
+                ],
+                "notes": "Policy lapsed, potential for revival"
+            },
+            "conversations": [],
+            "analytics": {
+                "total_conversations": 0,
+                "successful_conversations": 0,
+                "failed_conversations": 0,
+                "callback_requests": 0,
+                "payment_promises": 0,
+                "average_conversation_duration": 0,
+                "last_successful_contact": null,
+                "conversion_rate": 0.0
+            }
+        },
+        "customer_003": {
+            "profile": {
+                "id": "customer_003",
+                "policy_holder_name": "Priya Sharma",
+                "policy_number": "VE11223344",
+                "product_name": "WealthGrow Plan",
+                "grace_period": "60 days",
+                "policy_status": "Revival Pending",
+                "policy_bond": "Not available",
+                "policy_start_date": "2020-08-20",
+                "total_premium_paid": "₹1,20,000",
+                "premium_due_date": "2025-08-20",
+                "outstanding_amount": "₹25,000",
+                "sum_assured": "₹12,00,000",
+                "fund_value": "₹1,40,000",
+                "phone": "+91-9876543212",
+                "email": "priya.sharma@email.com",
+                "address": "Bangalore, Karnataka",
+                "created_date": "2020-08-20",
+                "last_updated": "2025-07-20T00:00:00.000000"
+            },
+            "status": {
+                "conversation_status": "pending",
+                "priority": "low",
+                "call_attempts": 0,
+                "last_call_attempt": null,
+                "next_call_scheduled": null,
+                "tags": [
+                    "high_value",
+                    "revival_pending"
+                ],
+                "notes": "High value customer, revival in progress"
+            },
+            "conversations": [],
+            "analytics": {
+                "total_conversations": 0,
+                "successful_conversations": 0,
+                "failed_conversations": 0,
+                "callback_requests": 0,
+                "payment_promises": 0,
+                "average_conversation_duration": 0,
+                "last_successful_contact": null,
+                "conversion_rate": 0.0
+            }
+        }
+    },
+    "system_analytics": {
+        "daily_stats": {},
+        "monthly_stats": {},
+        "agent_performance": {
+            "total_calls_made": 0,
+            "successful_calls": 0,
+            "failed_calls": 0,
+            "callback_requests": 0,
+            "payment_commitments": 0,
+            "average_call_duration": 0,
+            "success_rate": 0.0
+        },
+        "conversation_flows": {
+            "most_common_paths": [],
+            "interruption_points": [],
+            "success_patterns": []
+        }
+    },
+    "templates": {
+        "conversation_templates": {},
+        "response_templates": {},
+        "email_templates": {}
+    },
+    "settings": {
+        "business_rules": {
+            "max_call_attempts": 3,
+            "callback_wait_hours": 24,
+            "priority_escalation_days": 7,
+            "auto_reschedule": true
+        },
+        "ai_settings": {
+            "temperature": 0.7,
+            "max_tokens": 1000,
+            "model_version": "gemini-pro"
+        }
+    }
+}
